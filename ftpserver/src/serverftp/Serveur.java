@@ -1,9 +1,12 @@
 package serverftp;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 
 public class Serveur {
@@ -47,7 +50,21 @@ public class Serveur {
 	 * Method to read and build the map accounts
 	 */
 	private static void buildMap(String path) {
-		
+		BufferedReader buffer;
+		Scanner sc;
+		String line;
+		try {
+			buffer = new BufferedReader(new FileReader(path+"/.account"));
+			line = buffer.readLine();
+			while (line != null) {
+				sc = new Scanner(line);
+				sc.useDelimiter(":");
+				accounts.put(sc.next(), sc.next());
+				line = buffer.readLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
