@@ -11,6 +11,8 @@ import java.util.Scanner;
 
 public class FtpRequest extends Thread {
 
+	private String user;
+	
 	/**
 	 * Socket server
 	 */
@@ -27,18 +29,21 @@ public class FtpRequest extends Thread {
 	 */
 	public FtpRequest(Socket serv) {
 		this.serv = serv;
-		String ready = "220 ready\n";
+		this.user = "";
 		OutputStream out;
 		try {
 			out = serv.getOutputStream();
 			DataOutputStream db = new DataOutputStream(out);
-			db.writeBytes(ready);
+			db.writeBytes(DefConstant.READY);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		this.end = false;
 	}
 
+	/**
+	 * main method wich is call processRequest while the end of service
+	 */
 	public void run() {
 		while (!end) {
 			try {
@@ -63,11 +68,11 @@ public class FtpRequest extends Thread {
 		String rep = "";
 		/* switching on the type of the request */
 		switch (type) {
-		case "USER":
+		case DefConstant.USER:
 			rep = processUser(sc.next());
-		case "PASS":
+		case DefConstant.PASS:
 			rep = processPass(sc.next());
-		case "QUIT":
+		case DefConstant.QUIT:
 			rep = processQuit();
 		default:
 			
@@ -87,7 +92,11 @@ public class FtpRequest extends Thread {
 	 * @return response for a USER request
 	 */
 	public String processUser(String req) {
-		return "331 User name okay, need password.\n";
+		if (Server.userExist(req)) {
+			this.user = req;
+			return DefConstant.GOOD_USER;
+		} else
+			return "";
 	}
 	
 	/**
@@ -96,7 +105,10 @@ public class FtpRequest extends Thread {
 	 * @return response for a PASS request
 	 */
 	public String processPass(String req) {
-		return "";
+		if (Server.getPass(this.user, req))
+			return "good pass";
+		else
+			return "wrong pass";
 	}
 	
 	/**

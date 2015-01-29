@@ -1,8 +1,8 @@
 # car
 workspace car
 
-directory 
+filesys 
 =========
 is the file system used by the ftp server
 
--file : .account contains tuples (login:password) to build a map in the server.
+the file .account contains tuples (login:password) to build a map in the server.

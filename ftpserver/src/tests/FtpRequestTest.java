@@ -16,7 +16,7 @@ import org.junit.Test;
 
 public class FtpRequestTest {
 
-	static ServeurTest serv;
+	static ServerTest serv;
 	static Socket client;
 	static OutputStream out;
 	static String msg;
@@ -27,7 +27,7 @@ public class FtpRequestTest {
 	@BeforeClass
 	public static void setUp() {
 		try {
-			serv = new ServeurTest();
+			serv = new ServerTest();
 			serv.start();
 			client = new Socket("localhost", 1032);
 			/*verif connection is avaible */
