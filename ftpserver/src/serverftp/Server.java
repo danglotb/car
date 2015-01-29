@@ -73,6 +73,8 @@ public class Server {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
+		if (args.length < 1)
+			System.out.println("Error : Usage is java Server <directory>");
 		end = false;
 		ServerSocket sock = new ServerSocket(1032);
 		buildMap(args[0]);
@@ -80,7 +82,7 @@ public class Server {
 			System.out.println("Waiting for client...");
 			Socket serv = sock.accept();
 			System.out.println("Client connected...");
-			FtpRequest req = new FtpRequest(serv);
+			FtpRequest req = new FtpRequest(serv, args[0]);
 			req.start();
 		}
 		sock.close();

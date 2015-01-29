@@ -11,6 +11,8 @@ import java.util.Scanner;
 
 public class FtpRequest extends Thread {
 
+	private String current_directory;
+	
 	private String user;
 	
 	/**
@@ -27,9 +29,10 @@ public class FtpRequest extends Thread {
 	 * Constructor
 	 * @param serv
 	 */
-	public FtpRequest(Socket serv) {
+	public FtpRequest(Socket serv, String directory) {
 		this.serv = serv;
 		this.user = "";
+		this.current_directory = directory;
 		OutputStream out;
 		try {
 			out = serv.getOutputStream();

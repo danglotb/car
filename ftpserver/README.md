@@ -1,5 +1,7 @@
 # ftpserver
 
+
+
 filesys 
 =========
 is the file system used by the ftp server
@@ -12,4 +14,5 @@ java class
 
 *DefConstant : contain the whole constant used by the server
 *Server : class wich run a FtpRequest (in a thread) for each client connected
+	*toRun : java Server <directory>
 *FtpRequest : class wich is processing request and response with the client
