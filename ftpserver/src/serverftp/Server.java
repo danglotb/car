@@ -54,7 +54,7 @@ public class Server {
 		Scanner sc;
 		String line;
 		try {
-			buffer = new BufferedReader(new FileReader(path+"/.account"));
+			buffer = new BufferedReader(new FileReader(path+"/"+DefConstant.ACCOUNT_FILE));
 			line = buffer.readLine();
 			while (line != null) {
 				sc = new Scanner(line);
