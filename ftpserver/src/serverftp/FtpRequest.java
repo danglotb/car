@@ -99,7 +99,7 @@ public class FtpRequest extends Thread {
 			this.user = req;
 			return DefConstant.GOOD_USER;
 		} else
-			return "";
+			return DefConstant.WRONG_USER_OR_PASS;
 	}
 	
 	/**
@@ -108,10 +108,12 @@ public class FtpRequest extends Thread {
 	 * @return response for a PASS request
 	 */
 	public String processPass(String req) {
+		if (this.user.equals(""))
+			return DefConstant.NEED_USER;
 		if (Server.getPass(this.user, req))
-			return "good pass";
+			return DefConstant.GOOD_PASS;
 		else
-			return "wrong pass";
+			return DefConstant.WRONG_USER_OR_PASS;
 	}
 	
 	/**

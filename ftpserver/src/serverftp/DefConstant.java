@@ -20,5 +20,9 @@ public class DefConstant {
 	
 	public static final String READY = "220 ready\n";
 	public static final String GOOD_USER = "331 User name okay, need password.\n";
+	public static final String GOOD_PASS =  "230	User logged in, proceed. Logged out if appropriate.\n";
+	public static final String NEED_USER = "332 Need account for login.\n";
+	
+	public static final String WRONG_USER_OR_PASS = "430 Invalid username or password.\n";
 	
 }
