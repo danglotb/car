@@ -75,12 +75,14 @@ public class FtpRequest extends Thread {
 		/* switching on the type of the request */
 		switch (type) {
 			case DefConstant.USER:
+			case DefConstant.AUTH:
 				rep = processUser(sc.next());
 				break;
 			case DefConstant.PASS:
 				rep = processPass(sc.next());
 				break;
 			case DefConstant.LIST:
+				System.out.println(DefConstant.LIST);
 				rep = processList();
 				break;
 			case DefConstant.SYST:
@@ -91,7 +93,7 @@ public class FtpRequest extends Thread {
 				rep = processQuit();
 				break;
 			default:
-			
+				System.out.println("unknown message type : " + type );
 		}
 		/* send the response */
 		OutputStream out;
@@ -148,7 +150,7 @@ public class FtpRequest extends Thread {
 	 */
 	/* TODO: implement correct return codes */
 	public String processList(){
-		File directory = new File(DefConstant.CURRENT_DIR);
+		File directory = new File(this.current_directory);
 		File[] files = directory.listFiles();
 		List<String> fileList = new ArrayList<String>();
 		for(File file : files){
