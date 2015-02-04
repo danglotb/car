@@ -35,7 +35,8 @@ public class FtpRequest extends Thread {
 	public FtpRequest(Socket serv, String directory) {
 		this.serv = serv;
 		this.user = "";
-		this.current_directory = directory;
+		//Adding "\" before directory name if not already here, won't be understand by ftp client otherwise
+		this.current_directory = (directory.startsWith("\\") ? directory : "\\" + directory);
 		OutputStream out;
 		try {
 			out = serv.getOutputStream();
@@ -81,6 +82,10 @@ public class FtpRequest extends Thread {
 			case DefConstant.PASS:
 				rep = processPass(sc.next());
 				break;
+			case DefConstant.PWD:
+				System.out.println(257 + " " +  this.current_directory + "\n");
+				rep = DefConstant.SEND_PATH + this.current_directory + "\n";
+				break;
 			case DefConstant.LIST:
 				System.out.println(DefConstant.LIST);
 				rep = processList();
@@ -88,6 +93,12 @@ public class FtpRequest extends Thread {
 			case DefConstant.SYST:
 				System.out.println(DefConstant.SYST_INFO);
 				rep = DefConstant.SYST_INFO;
+				break;
+			case DefConstant.FEAT:
+				rep = DefConstant.FEAT_ERR;
+				break;
+			case DefConstant.TYPE:
+				rep = DefConstant.SEND_TYPE;
 				break;
 			case DefConstant.QUIT:
 				rep = processQuit();
@@ -156,7 +167,7 @@ public class FtpRequest extends Thread {
 		for(File file : files){
 			fileList.add(file.toString());
 		}
-			return "350 request";
+			return fileList.toString();
 	}
 	
 	/**
