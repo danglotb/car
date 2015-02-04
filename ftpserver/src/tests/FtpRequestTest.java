@@ -14,6 +14,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import serverftp.DefConstant;
+
 public class FtpRequestTest {
 
 	static ServerTest serv;
@@ -47,9 +49,11 @@ public class FtpRequestTest {
 	
 	@Test
 	public void testProcessUSER() {
-		msg = "USER toto\n";
+	
 		try {
-			/* envoie du username */
+			/* test de la reponse du server en cas d'envoie de requet sans log in */
+			msg = DefConstant.RETR+" unknown file\n";
+			msg = DefConstant.USER+" toto\n";
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(msg);
@@ -59,7 +63,34 @@ public class FtpRequestTest {
 			bf = new BufferedReader(new InputStreamReader(in));
 			msg = bf.readLine();
 
-			assertTrue(msg.equals("331 User name okay, need password."));
+			assertTrue(msg.equals(DefConstant.NEED_USER));
+			
+			/* envoie d'un vrai username */
+			msg = DefConstant.USER+" toto\n";
+			out = client.getOutputStream();
+			db = new DataOutputStream(out);
+			db.writeBytes(msg);
+			
+			/* test de la reponse */
+			in = client.getInputStream();
+			bf = new BufferedReader(new InputStreamReader(in));
+			msg = bf.readLine();
+
+			assertTrue(msg.equals(DefConstant.GOOD_USER));
+			
+			/* test de la reponse en cas de mauvais username */
+			msg = DefConstant.USER+" personne\n";
+			out = client.getOutputStream();
+			db = new DataOutputStream(out);
+			db.writeBytes(msg);
+			
+			/* test de la reponse */
+			in = client.getInputStream();
+			bf = new BufferedReader(new InputStreamReader(in));
+			msg = bf.readLine();
+
+			assertTrue(msg.equals(DefConstant.WRONG_USER_OR_PASS));
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -11,8 +11,9 @@ public class ServerTest extends Thread {
 	}
 	
 	public void run() {
+		String args [] = {"filesys"};
 		try {
-			Server.main(null);
+			Server.main(args);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

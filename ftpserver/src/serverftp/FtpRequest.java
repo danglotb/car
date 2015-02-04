@@ -69,14 +69,19 @@ public class FtpRequest extends Thread {
 		sc.useDelimiter(" ");
 		String type = sc.next();
 		String rep = "";
+		if (type != DefConstant.USER && this.user.equals(""))
+			rep =  DefConstant.NEED_USER;
 		/* switching on the type of the request */
 		switch (type) {
 		case DefConstant.USER:
 			rep = processUser(sc.next());
+			break;
 		case DefConstant.PASS:
 			rep = processPass(sc.next());
+			break;
 		case DefConstant.QUIT:
 			rep = processQuit();
+			break;
 		default:
 			
 		}
@@ -108,8 +113,6 @@ public class FtpRequest extends Thread {
 	 * @return response for a PASS request
 	 */
 	public String processPass(String req) {
-		if (this.user.equals(""))
-			return DefConstant.NEED_USER;
 		if (Server.getPass(this.user, req))
 			return DefConstant.GOOD_PASS;
 		else
