@@ -34,7 +34,7 @@ public class FtpRequest extends Thread {
 	 */
 	public FtpRequest(Socket serv, String directory) {
 		this.serv = serv;
-		this.user = "";
+		this.user = null;
 		this.current_directory = directory;
 		OutputStream out;
 		try {
@@ -156,7 +156,7 @@ public class FtpRequest extends Thread {
 		for(File file : files){
 			fileList.add(file.toString());
 		}
-			return "350 request";
+		return "350 request";
 	}
 	
 	/**
