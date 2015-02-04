@@ -197,6 +197,7 @@ public class FtpRequest extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		openNewSocket();
 		return processList();
 	}
 
@@ -212,4 +213,17 @@ public class FtpRequest extends Thread {
 	}
 	/* TODO other process */
 
+	public void openNewSocket() {
+		InputStream in;
+		try {
+			in = this.serv.getInputStream();
+			BufferedReader bf = new BufferedReader(new InputStreamReader(in));
+			String req = bf.readLine();
+			System.out.println(req);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 }
