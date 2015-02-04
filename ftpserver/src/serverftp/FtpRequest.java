@@ -2,6 +2,7 @@ package serverftp;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,14 +13,14 @@ import java.util.Scanner;
 public class FtpRequest extends Thread {
 
 	private String current_directory;
-	
+
 	private String user;
-	
+
 	/**
 	 * Socket server
 	 */
 	private Socket serv;
-	
+
 	/**
 	 * Boolean to loop on the processing
 	 */
@@ -27,12 +28,16 @@ public class FtpRequest extends Thread {
 
 	/**
 	 * Constructor
+	 * 
 	 * @param serv
 	 */
 	public FtpRequest(Socket serv, String directory) {
 		this.serv = serv;
 		this.user = "";
-		this.current_directory = directory;
+		// Adding "\" before directory name if not already here, won't be
+		// understand by ftp client otherwise
+		this.current_directory = (directory.startsWith("\\") ? directory : "\\"
+				+ directory);
 		OutputStream out;
 		try {
 			out = serv.getOutputStream();
@@ -45,7 +50,7 @@ public class FtpRequest extends Thread {
 	}
 
 	/**
-	 * main method wich is call processRequest while the end of service
+	 * main method which is calling processRequest while the end of service
 	 */
 	public void run() {
 		while (!end) {
@@ -59,6 +64,7 @@ public class FtpRequest extends Thread {
 
 	/**
 	 * Method processing request
+	 * 
 	 * @throws IOException
 	 */
 	public void processRequest() throws IOException {
@@ -74,16 +80,35 @@ public class FtpRequest extends Thread {
 		/* switching on the type of the request */
 		switch (type) {
 		case DefConstant.USER:
+		case DefConstant.AUTH:
 			rep = processUser(sc.next());
 			break;
 		case DefConstant.PASS:
 			rep = processPass(sc.next());
 			break;
+		case DefConstant.PWD:
+			System.out.println(257 + " " + this.current_directory + "\n");
+			rep = DefConstant.SEND_PATH + this.current_directory + "\n";
+			break;
+		case DefConstant.LIST:
+			System.out.println(DefConstant.LIST);
+			rep = processList();
+			break;
+		case DefConstant.SYST:
+			System.out.println(DefConstant.SYST_INFO);
+			rep = DefConstant.SYST_INFO;
+			break;
+		case DefConstant.FEAT:
+			rep = DefConstant.FEAT_ERR;
+			break;
+		case DefConstant.TYPE:
+			rep = processType();
+			break;
 		case DefConstant.QUIT:
 			rep = processQuit();
 			break;
 		default:
-			
+			System.out.println("unknown message type : " + type);
 		}
 		/* send the response */
 		OutputStream out;
@@ -96,32 +121,92 @@ public class FtpRequest extends Thread {
 
 	/**
 	 * method processing USER request
-	 * @param req : username send by the user
+	 * 
+	 * @param req
+	 *            : username send by the user
 	 * @return response for a USER request
 	 */
 	public String processUser(String req) {
+		System.out.println("user");
 		if (Server.userExist(req)) {
 			this.user = req;
 			return DefConstant.GOOD_USER;
 		} else
 			return DefConstant.WRONG_USER_OR_PASS;
 	}
-	
+
 	/**
 	 * method processing PASS request
-	 * @param req : password send by the user
+	 * 
+	 * @param req
+	 *            : password send by the user
 	 * @return response for a PASS request
 	 */
 	public String processPass(String req) {
-		if (Server.getPass(this.user, req))
+		System.out.println("mdp");
+		if (this.user.equals(""))
+			return DefConstant.NEED_USER;
+		if (Server.getPass(this.user, req)) {
+			System.out.println(DefConstant.GOOD_PASS);
 			return DefConstant.GOOD_PASS;
-		else
+
+		} else
 			return DefConstant.WRONG_USER_OR_PASS;
 	}
-	
+
 	/**
-	 * method processing QUIT request
-	 * set the boolean end to true to end the service
+	 * method processing RETR request
+	 * 
+	 * @param fileName
+	 *            : file to be sent on the server (
+	 */
+	public void processRetr(String fileName) {
+
+	}
+
+	/**
+	 * method processing LIST request
+	 * 
+	 * @return fileList : list of files of current directory
+	 */
+	/* TODO: implement correct return codes */
+	public String processList() {
+		File directory = new File(this.current_directory.substring(1));
+		System.out.println(directory.toString());
+		File[] files = directory.listFiles();
+		String fileList = "";
+		for (File file : files) {
+			fileList += file.toString().substring(this.current_directory.length())+"\\015\\012";
+		}
+		System.out.println(fileList);
+		OutputStream out;
+		try {
+			out = serv.getOutputStream();
+			DataOutputStream db = new DataOutputStream(out);
+			db.writeBytes(fileList+"\n");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "226\n";
+	}
+
+	public String processType() {
+		OutputStream out;
+		try {
+			out = serv.getOutputStream();
+			DataOutputStream db = new DataOutputStream(out);
+			db.writeBytes(DefConstant.SEND_TYPE);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		openNewSocket();
+		return processList();
+	}
+
+	/**
+	 * method processing QUIT request set the boolean end to true to end the
+	 * service
+	 * 
 	 * @return response for a QUIT request
 	 */
 	public String processQuit() {
@@ -130,4 +215,17 @@ public class FtpRequest extends Thread {
 	}
 	/* TODO other process */
 
+	public void openNewSocket() {
+		InputStream in;
+		try {
+			in = this.serv.getInputStream();
+			BufferedReader bf = new BufferedReader(new InputStreamReader(in));
+			String req = bf.readLine();
+			System.out.println(req);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 }
