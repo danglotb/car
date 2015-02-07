@@ -7,13 +7,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 
 public class FtpRequest extends Thread {
 
-	private String current_directory;
+	private String currentDirectory;
 
+	private Socket dataSocket;
+	private ServerSocket dataServerSocket;
+	
 	private String user;
 
 	/**
@@ -36,7 +40,7 @@ public class FtpRequest extends Thread {
 		this.user = "";
 		// Adding "\" before directory name if not already here, won't be
 		// understand by ftp client otherwise
-		this.current_directory = (directory.startsWith("\\") ? directory : "\\"
+		this.currentDirectory = (directory.startsWith("\\") ? directory : "\\"
 				+ directory);
 		OutputStream out;
 		try {
@@ -87,8 +91,8 @@ public class FtpRequest extends Thread {
 			rep = processPass(sc.next());
 			break;
 		case DefConstant.PWD:
-			System.out.println(257 + " " + this.current_directory + "\n");
-			rep = DefConstant.SEND_PATH + this.current_directory + "\n";
+			System.out.println(257 + " " + this.currentDirectory + "\n");
+			rep = DefConstant.SEND_PATH + this.currentDirectory + "\n";
 			break;
 		case DefConstant.LIST:
 			System.out.println(DefConstant.LIST);
@@ -171,12 +175,12 @@ public class FtpRequest extends Thread {
 	 */
 	/* TODO: implement correct return codes */
 	public String processList() {
-		File directory = new File(this.current_directory.substring(1));
+		File directory = new File(this.currentDirectory.substring(1));
 		System.out.println(directory.toString());
 		File[] files = directory.listFiles();
 		String fileList = "";
 		for (File file : files) {
-			fileList += file.toString().substring(this.current_directory.length())+"\\015\\012";
+			fileList += file.toString().substring(this.currentDirectory.length())+"\\015\\012";
 		}
 		System.out.println(fileList);
 		OutputStream out;
@@ -199,7 +203,7 @@ public class FtpRequest extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		openNewSocket();
+		openDataSocket();
 		return processList();
 	}
 
@@ -215,7 +219,20 @@ public class FtpRequest extends Thread {
 	}
 	/* TODO other process */
 
-	public void openNewSocket() {
+	public void passivDataSocket() {
+		try {
+			this.dataServerSocket = new ServerSocket(DefConstant.DATA_PORT);
+ 			this.dataSocket = this.dataServerSocket.accept();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * proxy method for create the good dataSocket (passiv or activ)
+	 */
+	public void openDataSocket() {
 		InputStream in;
 		try {
 			in = this.serv.getInputStream();
