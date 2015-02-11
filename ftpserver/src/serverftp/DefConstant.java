@@ -34,7 +34,8 @@ public class DefConstant {
 	public static final String FEAT_ERR = "211 no-features\n";
 	public static final String SEND_PATH = "257 ";
 	public static final String SEND_TYPE = "150 File status okay; about to open data connection.\n";
-	
+	public static final String ACCEPT_REQ = "150\n";
+	public static final String END_REQ = "226\n";
 	public static final String ACCEPT_PASV = "227 =127,0,0,1,"+DATA_PORT/256+","+DATA_PORT%256+"\n";
 	public static final String ACCEPT_PORT = "200 data connection PORT\n";
 	
