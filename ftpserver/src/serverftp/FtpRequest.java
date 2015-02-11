@@ -122,6 +122,10 @@ public class FtpRequest extends Thread {
 			System.out.println(DefConstant.RETR);
 			rep = processRetr(sc.next());
 			break;
+		case DefConstant.STOR:
+			System.out.print(DefConstant.STOR);
+			rep = processStor(sc.next());
+			break;
 		case DefConstant.QUIT:
 			rep = processQuit();
 			break;
@@ -135,6 +139,38 @@ public class FtpRequest extends Thread {
 		db.writeBytes(rep);
 		/* close */
 		sc.close();
+	}
+
+	
+	/**
+	 * method processing STOR equest
+	 * 
+	 * @param req
+	 *            : filename
+	 * @return
+	 */
+	public String processStor(String fileName) {
+		Path path = Paths.get(fileName);
+		OutputStream out;
+		DataOutputStream db;
+		InputStream in;
+		BufferedReader bf;
+	    try {
+	    	out = this.serv.getOutputStream();
+			db = new DataOutputStream(out);
+			db.writeBytes(DefConstant.ACCEPT_REQ);
+			
+			this.dataSocket = new Socket(adr, port);
+			in = this.dataSocket.getInputStream();;
+			bf = new BufferedReader(new InputStreamReader(in));
+			byte[] buffer = bf.readLine().getBytes();
+			this.dataSocket.close();
+			Files.write(path,buffer);
+			} catch (IOException e) {
+				e.printStackTrace();
+		}
+	    return DefConstant.ACCEPT_REQ;
+
 	}
 
 	/**
@@ -201,8 +237,7 @@ public class FtpRequest extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	    return "226\n";
-
+	    return DefConstant.ACCEPT_REQ;
 	}
 
 	/**
@@ -220,9 +255,10 @@ public class FtpRequest extends Thread {
 		}
 		System.out.println(fileList);
 		OutputStream out;
+		DataOutputStream db;
 		try {
 			out = this.serv.getOutputStream();
-			DataOutputStream db = new DataOutputStream(out);
+			db = new DataOutputStream(out);
 			db.writeBytes(DefConstant.ACCEPT_REQ);
 			
 			this.dataSocket = new Socket(adr, port);
@@ -245,8 +281,7 @@ public class FtpRequest extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		openDataSocket();
-		return processList();
+		return DefConstant.ACCEPT_TYPE;
 	}
 
 	/**
