@@ -182,30 +182,33 @@ public class FtpRequest extends Thread {
 	/* TODO: implement correct return codes */
 	public String processList() {
 		File directory = new File(this.currentDirectory.substring(1));
-		System.out.println(directory.toString());
 		File[] files = directory.listFiles();
 		String fileList = "";
 		for (File file : files) {
-			fileList += file.toString().substring(
-					this.currentDirectory.length())
-					+ "\\015\\012";
+			fileList += file.toString()+"\n";
 		}
 		System.out.println(fileList);
 		OutputStream out;
 		try {
-			out = serv.getOutputStream();
+			out = this.serv.getOutputStream();
 			DataOutputStream db = new DataOutputStream(out);
+			db.writeBytes(DefConstant.ACCEPT_REQ);
+			
+			this.dataSocket = new Socket(adr, port);
+			out = this.dataSocket.getOutputStream();
+			db = new DataOutputStream(out);
 			db.writeBytes(fileList + "\n");
+			this.dataSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return "226\n";
+		return DefConstant.END_REQ;
 	}
 
 	public String processType() {
 		OutputStream out;
 		try {
-			out = this.dataSocket.getOutputStream();
+			out = this.serv.getOutputStream();
 			DataOutputStream db = new DataOutputStream(out);
 			db.writeBytes(DefConstant.SEND_TYPE);
 		} catch (IOException e) {
@@ -236,27 +239,25 @@ public class FtpRequest extends Thread {
 	 * @return
 	 */
 	public String processPort(String args) {
-		try {
-			Scanner sc = new Scanner(args);
-			sc.useDelimiter(",");
-			adr = sc.next();
-			adr += "."+sc.next();
-			adr += "."+sc.next();
-			adr += "."+sc.next();
-			port = Integer.parseInt(sc.next()) * 256 + Integer.parseInt(sc.next());
-			this.dataSocket = new Socket(adr, port);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Scanner sc = new Scanner(args);
+		sc.useDelimiter(",");
+		adr = sc.next();
+		adr += "."+sc.next();
+		adr += "."+sc.next();
+		adr += "."+sc.next();
+		port = Integer.parseInt(sc.next()) * 256 + Integer.parseInt(sc.next());
 		return DefConstant.ACCEPT_PORT;
 	}
 
+	
+	
+	
+	
 	 public void passivDataSocket() {
 		try {
 			this.dataServerSocket = new ServerSocket(DefConstant.DATA_PORT);
 			this.dataSocket = this.dataServerSocket.accept();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
