@@ -16,13 +16,39 @@ import java.util.Scanner;
 
 public class FtpRequest extends Thread {
 
+	/**
+	 * Current directory of the ftp server
+	 */
 	private String currentDirectory;
 
+	/**
+	 * boolean represent the type of data connection (false = active connection, true = passiv connection)
+	 */
+	private boolean passivConnection;
+	
+	/**
+	 * port used for the data connection
+	 */
 	private int port;
+	
+	/**
+	 * adresse (as string) used for the data connection
+	 */
 	private String adr;
+	
+	/**
+	 * Socket used for the data connection
+	 */
 	private Socket dataSocket;
+	
+	/**
+	 * ServerSocket used for the data connection in case of a passiv connection
+	 */
 	private ServerSocket dataServerSocket;
 
+	/**
+	 * String of the username 
+	 */
 	private String user;
 
 	/**
@@ -43,6 +69,7 @@ public class FtpRequest extends Thread {
 	public FtpRequest(Socket serv, String directory) {
 		this.serv = serv;
 		this.user = "";
+		this.passivConnection = false;
 		// Adding "\" before directory name if not already here, won't be
 		// understand by ftp client otherwise
 		this.currentDirectory = (directory.startsWith("\\") ? directory : "\\"
@@ -101,6 +128,9 @@ public class FtpRequest extends Thread {
 			break;
 		case DefConstant.PORT:
 			rep = processPort(sc.next());
+			break;
+		case DefConstant.PASV:
+			rep = processPasv();
 			break;
 		case DefConstant.LIST:
 		case DefConstant.NLST:
@@ -280,6 +310,11 @@ public class FtpRequest extends Thread {
 		return DefConstant.END_REQ;
 	}
 
+	/**
+	 * method process the type request
+	 * 
+	 * @return
+	 */
 	public String processType() {
 		OutputStream out;
 		try {
@@ -303,8 +338,6 @@ public class FtpRequest extends Thread {
 		return "";
 	}
 
-	/* TODO other process */
-
 	/**
 	 * method to create the data connection
 	 * 
@@ -315,21 +348,36 @@ public class FtpRequest extends Thread {
 	public String processPort(String args) {
 		Scanner sc = new Scanner(args);
 		sc.useDelimiter(",");
-		adr = sc.next();
-		adr += "."+sc.next();
-		adr += "."+sc.next();
-		adr += "."+sc.next();
-		port = Integer.parseInt(sc.next()) * 256 + Integer.parseInt(sc.next());
+		this.passivConnection = true;
+		this.adr = sc.next();
+		this.adr += "."+sc.next();
+		this.adr += "."+sc.next();
+		this.adr += "."+sc.next();
+		this.port = Integer.parseInt(sc.next()) * 256 + Integer.parseInt(sc.next());
 		return DefConstant.ACCEPT_PORT;
 	}
 	
-	 public void passivDataSocket() {
-		try {
+	/**
+	 * method to create a data connection in passiv 
+	 * 
+	 * @return
+	 */
+	public String processPasv() {
+			OutputStream out;
+			DataOutputStream db;
+		 try {
+			out = this.serv.getOutputStream();
+			db = new DataOutputStream(out);
+			db.writeBytes(DefConstant.REQ_PASV);
+			
+			this.passivConnection = true;
+			
 			this.dataServerSocket = new ServerSocket(DefConstant.DATA_PORT);
 			this.dataSocket = this.dataServerSocket.accept();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return DefConstant.ACCEPT_PASV;
 	}
 
 	/**
