@@ -35,14 +35,12 @@ public class DefConstant {
 	public static final String SEND_PATH = "257 ";
 	public static final String SEND_TYPE = "150 File status okay; about to open data connection.\n";
 	public static final String ACCEPT_TYPE = "200\n";
-	public static final String ACCEPT_REQ = "150\n";
-	public static final String END_REQ = "226\n";
-	public static final String ACCEPT_PASV = "227 PASV connection ok\n";
-	public static final String REQ_PASV = "227 =127,0,0,1,"+DATA_PORT/256+","+DATA_PORT%256+"\n";
+	public static final String ACCEPT_REQ = "150  Starting file transfer\n";
+	public static final String ACCEPT_PASV = "227 =127,0,0,1,"+DATA_PORT/256+","+DATA_PORT%256+"\n";
 	public static final String ACCEPT_PORT = "200 data connection PORT\n";
 	public static final String FILE_TRANSFERT_SUCCESSFUL = "226 File transfert completed\n";
 	public static final String TCP_CONNECTION_FAILURE = "426 TCP connection broken by client or network failure\n";
-	public static final String FILE_ERROR = "451 Can't open or find file\n";
+	public static final String FILE_ERROR = "451 File read or write error\n";
 	public static final String WRONG_USER_OR_PASS = "430 Invalid username or password.\n";
 
 

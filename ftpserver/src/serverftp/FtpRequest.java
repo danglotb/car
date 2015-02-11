@@ -184,21 +184,32 @@ public class FtpRequest extends Thread {
 		DataOutputStream db;
 		InputStream in;
 		BufferedReader bf;
-	    try {
-	    	out = this.serv.getOutputStream();
+		byte[] buffer;
+		try {
+			out = this.serv.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(DefConstant.ACCEPT_REQ);
-			
-			this.dataSocket = new Socket(adr, port);
-			in = this.dataSocket.getInputStream();;
-			bf = new BufferedReader(new InputStreamReader(in));
-			byte[] buffer = bf.readLine().getBytes();
-			this.dataSocket.close();
-			Files.write(path,buffer);
+			try {
+				this.dataSocket = new Socket(adr, port);
+				in = this.dataSocket.getInputStream();
+				;
+				bf = new BufferedReader(new InputStreamReader(in));
+				buffer = bf.readLine().getBytes();
 			} catch (IOException e) {
 				e.printStackTrace();
+				return DefConstant.TCP_CONNECTION_FAILURE;
+			}
+			this.dataSocket.close();
+			try {
+				Files.write(path, buffer);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return DefConstant.FILE_ERROR;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-	    return DefConstant.ACCEPT_REQ;
+		return DefConstant.FILE_TRANSFERT_SUCCESSFUL;
 
 	}
 
@@ -248,23 +259,23 @@ public class FtpRequest extends Thread {
 		OutputStream out;
 		DataOutputStream db;
 		byte[] buffer;
-	    try {
-	    	out = this.serv.getOutputStream();
+		try {
+			out = this.serv.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(DefConstant.ACCEPT_REQ);
-			
+
 			try {
 				buffer = Files.readAllBytes(path);
 			} catch (IOException e) {
 				e.printStackTrace();
 				return DefConstant.FILE_ERROR;
 			}
-			
+
 			try {
-	
-			this.dataSocket = new Socket(adr, port);
-			out = this.dataSocket.getOutputStream();
-			db = new DataOutputStream(out);
+
+				this.dataSocket = new Socket(adr, port);
+				out = this.dataSocket.getOutputStream();
+				db = new DataOutputStream(out);
 			} catch (IOException e) {
 				e.printStackTrace();
 				return DefConstant.TCP_CONNECTION_FAILURE;
@@ -272,10 +283,10 @@ public class FtpRequest extends Thread {
 			db.write(buffer);
 			this.dataSocket.close();
 
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-	    	return DefConstant.FILE_TRANSFERT_SUCCESSFUL;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return DefConstant.FILE_TRANSFERT_SUCCESSFUL;
 	}
 
 	/**
@@ -283,17 +294,19 @@ public class FtpRequest extends Thread {
 	 * 
 	 * @return fileList : list of files of current directory
 	 */
-	/* TODO: implement correct return codes */
 	public String processList() {
+		OutputStream out;
+		DataOutputStream db;
+		
 		File directory = new File(this.currentDirectory.substring(1));
 		File[] files = directory.listFiles();
+		
+		
 		String fileList = "";
 		for (File file : files) {
 			fileList += file.toString()+"\n";
 		}
-		System.out.println(fileList);
-		OutputStream out;
-		DataOutputStream db;
+
 		try {
 			out = this.serv.getOutputStream();
 			db = new DataOutputStream(out);
@@ -307,7 +320,7 @@ public class FtpRequest extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return DefConstant.END_REQ;
+		return DefConstant.FILE_TRANSFERT_SUCCESSFUL;
 	}
 
 	/**
@@ -368,7 +381,7 @@ public class FtpRequest extends Thread {
 		 try {
 			out = this.serv.getOutputStream();
 			db = new DataOutputStream(out);
-			db.writeBytes(DefConstant.REQ_PASV);
+			db.writeBytes(DefConstant.ACCEPT_PASV);
 			
 			this.passivConnection = true;
 			
