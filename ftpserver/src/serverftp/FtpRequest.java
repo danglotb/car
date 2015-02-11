@@ -264,17 +264,19 @@ public class FtpRequest extends Thread {
 	 * 
 	 * @return fileList : list of files of current directory
 	 */
-	/* TODO: implement correct return codes */
 	public String processList() {
+		OutputStream out;
+		DataOutputStream db;
+		
 		File directory = new File(this.currentDirectory.substring(1));
 		File[] files = directory.listFiles();
+		
+		
 		String fileList = "";
 		for (File file : files) {
 			fileList += file.toString()+"\n";
 		}
-		System.out.println(fileList);
-		OutputStream out;
-		DataOutputStream db;
+
 		try {
 			out = this.serv.getOutputStream();
 			db = new DataOutputStream(out);
