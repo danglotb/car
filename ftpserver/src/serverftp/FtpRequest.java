@@ -7,8 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.DatagramPacket;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class FtpRequest extends Thread {
@@ -114,6 +118,10 @@ public class FtpRequest extends Thread {
 		case DefConstant.TYPE:
 			rep = processType();
 			break;
+		case DefConstant.RETR:
+			System.out.println(DefConstant.RETR);
+			rep = processRetr(sc.next());
+			break;
 		case DefConstant.QUIT:
 			rep = processQuit();
 			break;
@@ -170,7 +178,24 @@ public class FtpRequest extends Thread {
 	 * @param fileName
 	 *            : file to be sent on the server (
 	 */
-	public void processRetr(String fileName) {
+	public String processRetr(String fileName) {
+		Path path = Paths.get(fileName);
+		System.out.println(path.toString());
+	    try {
+			byte[] buffer = Files.readAllBytes(path);
+			this.dataSocket = new Socket(adr, port);
+			OutputStream out = this.dataSocket.getOutputStream();
+			DataOutputStream db = new DataOutputStream(out);
+			db.write(buffer);
+			} catch (IOException e) {
+				e.printStackTrace();
+		}
+	    try {
+			this.dataSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	    return "226\n";
 
 	}
 
