@@ -100,6 +100,7 @@ public class FtpRequest extends Thread {
 			rep = processPort(sc.next());
 			break;
 		case DefConstant.LIST:
+		case DefConstant.NLST:
 			System.out.println(DefConstant.LIST);
 			rep = processList();
 			break;
@@ -204,7 +205,7 @@ public class FtpRequest extends Thread {
 	public String processType() {
 		OutputStream out;
 		try {
-			out = serv.getOutputStream();
+			out = this.dataSocket.getOutputStream();
 			DataOutputStream db = new DataOutputStream(out);
 			db.writeBytes(DefConstant.SEND_TYPE);
 		} catch (IOException e) {
@@ -243,14 +244,14 @@ public class FtpRequest extends Thread {
 			adr += "."+sc.next();
 			adr += "."+sc.next();
 			port = Integer.parseInt(sc.next()) * 256 + Integer.parseInt(sc.next());
-			this.dataServerSocket = new ServerSocket(port);
+			this.dataSocket = new Socket(adr, port);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return DefConstant.ACCEPT_PORT;
 	}
 
-	public void passivDataSocket() {
+	 public void passivDataSocket() {
 		try {
 			this.dataServerSocket = new ServerSocket(DefConstant.DATA_PORT);
 			this.dataSocket = this.dataServerSocket.accept();
