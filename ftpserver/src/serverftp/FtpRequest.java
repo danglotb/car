@@ -215,28 +215,37 @@ public class FtpRequest extends Thread {
 	 */
 	public String processRetr(String fileName) {
 		Path path = Paths.get(fileName);
-		System.out.println(path.toString());
 		OutputStream out;
 		DataOutputStream db;
+		byte[] buffer;
 	    try {
 	    	out = this.serv.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(DefConstant.ACCEPT_REQ);
 			
-			byte[] buffer = Files.readAllBytes(path);
+			try {
+				buffer = Files.readAllBytes(path);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return DefConstant.FILE_ERROR;
+			}
+			
+			try {
+	
 			this.dataSocket = new Socket(adr, port);
 			out = this.dataSocket.getOutputStream();
 			db = new DataOutputStream(out);
-			db.write(buffer);
 			} catch (IOException e) {
 				e.printStackTrace();
-		}
-	    try {
+				return DefConstant.TCP_CONNECTION_FAILURE;
+			}
+			db.write(buffer);
 			this.dataSocket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	    return DefConstant.ACCEPT_REQ;
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	    	return DefConstant.FILE_TRANSFERT_SUCCESSFUL;
 	}
 
 	/**
