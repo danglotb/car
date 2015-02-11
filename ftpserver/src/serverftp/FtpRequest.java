@@ -248,10 +248,6 @@ public class FtpRequest extends Thread {
 		port = Integer.parseInt(sc.next()) * 256 + Integer.parseInt(sc.next());
 		return DefConstant.ACCEPT_PORT;
 	}
-
-	
-	
-	
 	
 	 public void passivDataSocket() {
 		try {
