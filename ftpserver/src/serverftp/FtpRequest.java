@@ -15,9 +15,11 @@ public class FtpRequest extends Thread {
 
 	private String currentDirectory;
 
+	private int port;
+	private String adr;
 	private Socket dataSocket;
 	private ServerSocket dataServerSocket;
-	
+
 	private String user;
 
 	/**
@@ -80,7 +82,7 @@ public class FtpRequest extends Thread {
 		String type = sc.next();
 		String rep = "";
 		if (type != DefConstant.USER && this.user.equals(""))
-			rep =  DefConstant.NEED_USER;
+			rep = DefConstant.NEED_USER;
 		/* switching on the type of the request */
 		switch (type) {
 		case DefConstant.USER:
@@ -93,6 +95,9 @@ public class FtpRequest extends Thread {
 		case DefConstant.PWD:
 			System.out.println(257 + " " + this.currentDirectory + "\n");
 			rep = DefConstant.SEND_PATH + this.currentDirectory + "\n";
+			break;
+		case DefConstant.PORT:
+			rep = processPort(sc.next());
 			break;
 		case DefConstant.LIST:
 			System.out.println(DefConstant.LIST);
@@ -180,14 +185,16 @@ public class FtpRequest extends Thread {
 		File[] files = directory.listFiles();
 		String fileList = "";
 		for (File file : files) {
-			fileList += file.toString().substring(this.currentDirectory.length())+"\\015\\012";
+			fileList += file.toString().substring(
+					this.currentDirectory.length())
+					+ "\\015\\012";
 		}
 		System.out.println(fileList);
 		OutputStream out;
 		try {
 			out = serv.getOutputStream();
 			DataOutputStream db = new DataOutputStream(out);
-			db.writeBytes(fileList+"\n");
+			db.writeBytes(fileList + "\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -217,18 +224,42 @@ public class FtpRequest extends Thread {
 		this.end = true;
 		return "";
 	}
+
 	/* TODO other process */
+
+	/**
+	 * method to create the data connection
+	 * 
+	 * @param args
+	 *            h1,h2,h3,h4,p1,p2
+	 * @return
+	 */
+	public String processPort(String args) {
+		try {
+			Scanner sc = new Scanner(args);
+			sc.useDelimiter(",");
+			adr = sc.next();
+			adr += "."+sc.next();
+			adr += "."+sc.next();
+			adr += "."+sc.next();
+			port = Integer.parseInt(sc.next()) * 256 + Integer.parseInt(sc.next());
+			this.dataServerSocket = new ServerSocket(port);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return DefConstant.ACCEPT_PORT;
+	}
 
 	public void passivDataSocket() {
 		try {
 			this.dataServerSocket = new ServerSocket(DefConstant.DATA_PORT);
- 			this.dataSocket = this.dataServerSocket.accept();
+			this.dataSocket = this.dataServerSocket.accept();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * proxy method for create the good dataSocket (passiv or activ)
 	 */
@@ -242,7 +273,7 @@ public class FtpRequest extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 }

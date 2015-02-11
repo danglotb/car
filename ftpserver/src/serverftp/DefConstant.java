@@ -12,6 +12,7 @@ public class DefConstant {
 	public static final String USER = "USER";
 	public static final String PASS = "PASS";
 	public static final String SYST = "SYST";
+	public static final String PORT = "PORT";
 	public static final String RETR = "RETR";
 	public static final String STOR = "STOR";
 	public static final String LIST = "LIST";
@@ -34,7 +35,10 @@ public class DefConstant {
 	public static final String SEND_TYPE = "150 File status okay; about to open data connection.\n";
 	
 	public static final String ACCEPT_PASV = "227 =127,0,0,1,"+DATA_PORT/256+","+DATA_PORT%256+"\n";
+	public static final String ACCEPT_PORT = "200 dataconnection PORT\n";
 	
 	public static final String WRONG_USER_OR_PASS = "430 Invalid username or password.\n";
+	
+
 	
 }
