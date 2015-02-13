@@ -127,6 +127,7 @@ public class FtpRequest extends Thread {
 			rep = DefConstant.SEND_PATH + this.currentDirectory + "\n";
 			break;
 		case DefConstant.PORT:
+			System.out.println(DefConstant.PORT);
 			rep = processPort(sc.next());
 			break;
 		case DefConstant.PASV:
@@ -311,12 +312,14 @@ public class FtpRequest extends Thread {
 			out = this.serv.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(DefConstant.ACCEPT_REQ);
+			if (!this.passivConnection) 
+				this.dataSocket = new Socket(adr, port);
 			
-			this.dataSocket = new Socket(adr, port);
 			out = this.dataSocket.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(fileList + "\n");
-			this.dataSocket.close();
+			if (!this.passivConnection) 
+				this.dataSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -361,7 +364,7 @@ public class FtpRequest extends Thread {
 	public String processPort(String args) {
 		Scanner sc = new Scanner(args);
 		sc.useDelimiter(",");
-		this.passivConnection = true;
+		this.passivConnection = false;
 		this.adr = sc.next();
 		this.adr += "."+sc.next();
 		this.adr += "."+sc.next();
