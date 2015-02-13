@@ -22,6 +22,9 @@ public class DefConstant {
 	public static final String TYPE = "TYPE";
 	public static final String QUIT = "QUIT";
 	
+	/* request for data socket */
+	public static final String PASV = "PASV";
+	
 	/* Response of the server */
 	
 	public static final String READY = "220 ready\n";

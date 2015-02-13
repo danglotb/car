@@ -220,11 +220,16 @@ public class FtpRequest extends Thread {
 	/* TODO other process */
 
 	public void passivDataSocket() {
+		OutputStream out;
 		try {
+			out = serv.getOutputStream();
+			DataOutputStream db = new DataOutputStream(out);
+			db.writeBytes(DefConstant.ACCEPT_PASV);
+			
 			this.dataServerSocket = new ServerSocket(DefConstant.DATA_PORT);
  			this.dataSocket = this.dataServerSocket.accept();
+ 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -234,15 +239,11 @@ public class FtpRequest extends Thread {
 	 */
 	public void openDataSocket() {
 		InputStream in;
-		try {
-			in = this.serv.getInputStream();
-			BufferedReader bf = new BufferedReader(new InputStreamReader(in));
-			String req = bf.readLine();
-			System.out.println(req);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+	/*	in = this.serv.getInputStream();
+		BufferedReader bf = new BufferedRe	ader(new InputStreamReader(in));
+		String req = bf.readLine();
+		System.out.println(req); */
+		passivDataSocket();
 	}
 	
 }
