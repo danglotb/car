@@ -312,13 +312,13 @@ public class FtpRequest extends Thread {
 			out = this.serv.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(DefConstant.ACCEPT_REQ);
-			if (!this.passivConnection) 
+			if (this.passivConnection) 
 				this.dataSocket = new Socket(adr, port);
 			
 			out = this.dataSocket.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(fileList + "\n");
-			if (!this.passivConnection) 
+			if (this.passivConnection) 
 				this.dataSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();

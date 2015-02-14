@@ -77,6 +77,9 @@ public class FtpRequestTest {
 			
 			assertTrue(msg.equals(DefConstant.GOOD_PASS.substring(0,DefConstant.GOOD_PASS.length()-1)));
 			
+			testProcessPort();
+			testProcessLIST();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -86,13 +89,7 @@ public class FtpRequestTest {
 	/**
 	 * Warning, need to stay at the root of filesys
 	 */
-	@Test
 	public void testProcessLIST() {
-		ArrayList<String> files = new ArrayList<String>();
-		ArrayList<String> sample = new ArrayList<String>();
-		sample.add("test_folder");
-		sample.add("new_test");
-		sample.add("test");
 		try {
 			msg = DefConstant.LIST+"\n";
 			/* envoie de la commande LIST*/
@@ -105,31 +102,41 @@ public class FtpRequestTest {
 			bf = new BufferedReader(new InputStreamReader(in));
 			msg = bf.readLine();
 			
-			while (msg != null) {
-				files.add(msg);
-				msg = bf.readLine();
-			}
-			
-		//	assertArrayEquals(sample.toArray(), files.toArray());
+			assertTrue((msg+"\n").equals(DefConstant.ACCEPT_REQ));
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	@Test
 	public void testProcessRETR() {
 		
 	}
 	
-	@Test
 	public void testProcessSTOR() {
 		
 	}
 	
-	@Test
 	public void testProcessQUIT() {
 		
+	}
+	
+	public void testProcessPort() {
+		try {
+			msg = DefConstant.PORT+" 127,0,0,1,32,32,\n";
+			/* envoie de la commande PORT*/
+			out = client.getOutputStream();
+			db = new DataOutputStream(out);
+			db.writeBytes(msg);
+			
+			/* test de la reponse du server */
+			in = client.getInputStream();
+			bf = new BufferedReader(new InputStreamReader(in));
+			msg = bf.readLine();
+			
+			assertTrue((msg+"\n").equals(DefConstant.ACCEPT_PORT));
+			
+		} catch (Exception e) {}
 	}
 	
 }
