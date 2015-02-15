@@ -396,20 +396,4 @@ public class FtpRequest extends Thread {
 		}
 		return DefConstant.ACCEPT_PASV;
 	}
-
-	/**
-	 * proxy method for create the good dataSocket (passiv or activ)
-	 */
-	public void openDataSocket() {
-		InputStream in;
-		try {
-			in = this.serv.getInputStream();
-			BufferedReader bf = new BufferedReader(new InputStreamReader(in));
-			String req = bf.readLine();
-			System.out.println(req);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 }
