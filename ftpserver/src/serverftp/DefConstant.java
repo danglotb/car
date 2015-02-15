@@ -25,7 +25,6 @@ public class DefConstant {
 	public static final String QUIT = "QUIT";
 	
 	/* Response of the server */
-	
 	public static final String READY = "220 ready\n";
 	public static final String GOOD_USER = "331 User name okay, need password.\n";
 	public static final String GOOD_PASS =  "230 User logged in, proceed. Logged out if appropriate.\n";

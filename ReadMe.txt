@@ -16,6 +16,9 @@ package 'serverftp':
 Une classe Server, qui crée un objet de type FtpRequest dans un nouveau Thread 
 pour chaque connexion de client.
 La classe FtpRequest attends une requete de client, la traite, et renvoie le code correspondant.
+Une Classe DefConstant.java qui contient toutes les constantes utilisées par le protocole :
+	*les réquêtes faites par les clients.
+	*les réponses faites par le serveur aux client.
 
 package 'tests':
 Une classe ServerTest(encapsulation de Server.java),
@@ -25,6 +28,42 @@ La Classe FtpRequestTest effectue une série de requete sur le serveur lancer da
 
 Codes sample :
 
-TAMER
+La methode run() hérité de Thread effectue une boucle infinie sur la methode processRequest().
+Cette méthode switch sur la requete et appelle la methode process associée. La plupart 
+de ces méthodes renvoie une string, qui est le code reponse. 
+
+  public void processRequest() throws IOException {
+		InputStream in = this.serv.getInputStream();
+		BufferedReader bf = new BufferedReader(new InputStreamReader(in));
+		String req = bf.readLine();
+		Scanner sc = new Scanner(req);
+		sc.useDelimiter(" ");
+		String type = sc.next();
+		String rep = "";
+		if (type != DefConstant.USER && this.user.equals(""))
+			rep = DefConstant.NEED_USER;
+		/* switching on the type of the request */
+		switch (type) {
+		case DefConstant.USER:
+		case DefConstant.AUTH:
+			rep = processUser(sc.next());
+			break;
+			.
+			.
+			.
+			.
+		default:
+			System.out.println("unknown message type : " + type);
+		}
+		/* send the response */
+		OutputStream out;
+		out = serv.getOutputStream();
+		DataOutputStream db = new DataOutputStream(out);
+		db.writeBytes(rep);
+		/* close */
+		sc.close();
+	}
+	
+	
 
 

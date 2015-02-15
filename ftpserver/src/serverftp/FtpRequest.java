@@ -174,7 +174,7 @@ public class FtpRequest extends Thread {
 
 	
 	/**
-	 * method processing STOR equest
+	 * method processing STOR request
 	 * 
 	 * @param req
 	 *            : filename
