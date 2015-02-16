@@ -29,7 +29,7 @@ public class DefConstant {
 	public static final String GOOD_USER = "331 User name okay, need password.\n";
 	public static final String GOOD_PASS =  "230 User logged in, proceed. Logged out if appropriate.\n";
 	public static final String NEED_USER = "332 Need account for login.\n";
-	public static final String SYST_INFO = "215 Linux\n";
+	public static final String SYST_INFO = "215 UNIX Type: L8\n";
 	public static final String FEAT_ERR = "211 no-features\n";
 	public static final String SEND_PATH = "257 ";
 	public static final String SEND_TYPE = "150 File status okay; about to open data connection.\n";

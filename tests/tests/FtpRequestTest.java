@@ -170,7 +170,7 @@ public class FtpRequestTest {
 	@Test
 	public void testProcessRETR() {
 		try {
-			msg = DefConstant.RETR+" ftpserver/filesys/test\n";
+			msg = DefConstant.RETR+" filesys/test\n";
 			/* envoie de la commande LIST*/
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
@@ -212,7 +212,7 @@ public class FtpRequestTest {
 			Path p = Paths.get("teststor");
 			buffer = Files.readAllBytes(p);
 			
-			msg = DefConstant.STOR+" ftpserver/filesys/test\n";
+			msg = DefConstant.STOR+" filesys/teststor\n";
 			/* envoie de la commande LIST*/
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
