@@ -20,7 +20,7 @@ Une Classe DefConstant.java qui contient toutes les constantes utilisées par le
 	*les réquêtes faites par les clients.
 	*les réponses faites par le serveur aux client.
 
-package 'tests':
+dossier de source 'tests':
 Une classe ServerTest(encapsulation de Server.java),
  qui est lancé dans un Thread afin d'effectuer les tests.
 La Classe FtpRequestTest effectue une série de requêtes sur le serveur lancé dans le Thread

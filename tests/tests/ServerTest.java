@@ -11,7 +11,7 @@ public class ServerTest extends Thread {
 	}
 	
 	public void run() {
-		String args [] = {"ftpserver/filesys"};
+		String args [] = {"filesys"};
 		try {
 			Server.main(args);
 		} catch (IOException e) {
