@@ -68,7 +68,7 @@ public class FtpRequest extends Thread {
 	 */
 	public FtpRequest(Socket serv, String directory) {
 		this.serv = serv;
-		this.user = "";
+		this.user = DefConstant.ANONYMOUS;
 		this.passivConnection = false;
 		// Adding "\" before directory name if not already here, won't be
 		// understand by ftp client otherwise
@@ -109,9 +109,10 @@ public class FtpRequest extends Thread {
 		String req = bf.readLine();
 		Scanner sc = new Scanner(req);
 		sc.useDelimiter(" ");
+		System.out.println(">>"+req);
 		String type = sc.next();
 		String rep = "";
-		if (type != DefConstant.USER && this.user.equals(""))
+/*		if (type != DefConstant.USER && this.user.equals(""))
 			rep = DefConstant.NEED_USER;
 		/* switching on the type of the request */
 		switch (type) {
@@ -154,8 +155,13 @@ public class FtpRequest extends Thread {
 			rep = processRetr(sc.next());
 			break;
 		case DefConstant.STOR:
-			System.out.print(DefConstant.STOR);
-			rep = processStor(sc.next());
+			if (this.user.equals(DefConstant.ANONYMOUS)) {
+				System.out.print(DefConstant.NEED_USER);
+				rep = DefConstant.NEED_USER;
+			} else {
+				System.out.print(DefConstant.STOR);
+				rep = processStor(sc.next());
+			}
 			break;
 		case DefConstant.QUIT:
 			rep = processQuit();

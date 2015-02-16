@@ -5,6 +5,7 @@ public class DefConstant {
 	/* file where is stored tuples of login / pass */
 	public static final String ACCOUNT_FILE = ".account";
 	public static final int DATA_PORT = 1034;
+	public static final String ANONYMOUS = "anonymous";
 	
 	/* list of type of request */
 	public static final String AUTH = "AUTH";
