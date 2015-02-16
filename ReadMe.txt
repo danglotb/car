@@ -7,7 +7,7 @@ Antoine Philippe
 
 Introduction : 
 
-Implémentation d'un serveur FTP en java. Il respect le RFC 959. 
+Implémentation d'un serveur FTP en java. Il respecte le RFC 959. 
 (http://fr.wikipedia.org/wiki/File_Transfer_Protocol)
 
 Architecture : 
@@ -15,7 +15,7 @@ Architecture :
 package 'serverftp':
 Une classe Server, qui crée un objet de type FtpRequest dans un nouveau Thread 
 pour chaque connexion de client.
-La classe FtpRequest attends une requete de client, la traite, et renvoie le code correspondant.
+La classe FtpRequest attend une requete de client, la traite, et renvoie le code correspondant.
 Une Classe DefConstant.java qui contient toutes les constantes utilisées par le protocole :
 	*les réquêtes faites par les clients.
 	*les réponses faites par le serveur aux client.
@@ -23,7 +23,7 @@ Une Classe DefConstant.java qui contient toutes les constantes utilisées par le
 package 'tests':
 Une classe ServerTest(encapsulation de Server.java),
  qui est lancé dans un Thread afin d'effectuer les tests.
-La Classe FtpRequestTest effectue une série de requete sur le serveur lancer dans le Thread
+La Classe FtpRequestTest effectue une série de requêtes sur le serveur lancé dans le Thread
 (cf ci-dessus) et test les codes de retour du serveur.
 
 Codes sample :
