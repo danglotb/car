@@ -17,6 +17,11 @@ import java.util.Scanner;
 public class FtpRequest extends Thread {
 
 	/**
+	 * directory root
+	 */
+	private String rootDirectory;
+	
+	/**
 	 * Current directory of the ftp server
 	 */
 	private String currentDirectory;
@@ -70,11 +75,8 @@ public class FtpRequest extends Thread {
 		this.serv = serv;
 		this.user = DefConstant.ANONYMOUS;
 		this.passivConnection = false;
-		// Adding "\" before directory name if not already here, won't be
-		// understand by ftp client otherwise
-		this.currentDirectory = (directory.startsWith("\\") ? directory : "\\"
-				+ directory);
-		this.currentDirectory=directory;
+		this.currentDirectory = directory;
+		this.rootDirectory = directory;
 		OutputStream out;
 		try {
 			out = serv.getOutputStream();
@@ -107,8 +109,11 @@ public class FtpRequest extends Thread {
 		InputStream in = this.serv.getInputStream();
 		BufferedReader bf = new BufferedReader(new InputStreamReader(in));
 		String req = bf.readLine();
+		if (req == null)
+			return;
 		Scanner sc = new Scanner(req);
 		sc.useDelimiter(" ");
+		System.out.println(req);
 		String type = sc.next();
 		String rep = "";
 		switch (type) {
@@ -120,7 +125,10 @@ public class FtpRequest extends Thread {
 			rep = processPass(sc.next());
 			break;
 		case DefConstant.CWD:
-			rep = processCWD(sc.next());
+			if (sc.hasNext())
+				rep = processCWD(sc.next());
+			else
+				rep = processCWD(rootDirectory);
 			break;
 		case DefConstant.PWD:
 			System.out.println(257 + " " + this.currentDirectory + "\n");
@@ -394,7 +402,7 @@ public class FtpRequest extends Thread {
 				return DefConstant.SEND_TYPE;
 			}
 			 
-			out = this.serv.getOutputStream();
+			out = this.serv.getOutputStream(); 
 			db = new DataOutputStream(out);
 			db.writeBytes(DefConstant.ACCEPT_PASV);
 	
