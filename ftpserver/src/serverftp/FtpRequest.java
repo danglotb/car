@@ -109,7 +109,6 @@ public class FtpRequest extends Thread {
 		String req = bf.readLine();
 		Scanner sc = new Scanner(req);
 		sc.useDelimiter(" ");
-		System.out.println(">>"+req);
 		String type = sc.next();
 		String rep = "";
 		switch (type) {
@@ -324,8 +323,7 @@ public class FtpRequest extends Thread {
 			out = this.dataSocket.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(fileList + "\n");
-			if (!this.passivConnection) 
-				this.dataSocket.close();
+			this.dataSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -391,6 +389,11 @@ public class FtpRequest extends Thread {
 			OutputStream out;
 			DataOutputStream db;
 		 try {
+			if (this.passivConnection) {
+				this.dataSocket = this.dataServerSocket.accept();
+				return DefConstant.SEND_TYPE;
+			}
+			 
 			out = this.serv.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(DefConstant.ACCEPT_PASV);
@@ -401,8 +404,8 @@ public class FtpRequest extends Thread {
 			this.dataSocket = this.dataServerSocket.accept();
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.printStackTrace( );
 		}
-		return DefConstant.ACCEPT_PASV;
+		return DefConstant.SEND_TYPE;
 	}
 }

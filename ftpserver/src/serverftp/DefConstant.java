@@ -37,7 +37,7 @@ public class DefConstant {
 	public static final String SEND_TYPE = "150 File status okay; about to open data connection.\n";
 	public static final String ACCEPT_TYPE = "200 accept Type\n";
 	public static final String ACCEPT_REQ = "150  Starting file transfer\n";
-	public static final String ACCEPT_PASV = "227 =127,0,0,1,"+DATA_PORT/256+","+DATA_PORT%256+"\n";
+	public static final String ACCEPT_PASV = "227 (127,0,0,1,"+DATA_PORT/256+","+DATA_PORT%256+")\n";
 	public static final String ACCEPT_PORT = "200 data connection PORT\n";
 	public static final String FILE_TRANSFERT_SUCCESSFUL = "226 File transfert completed\n";
 	public static final String TCP_CONNECTION_FAILURE = "426 TCP connection broken by client or network failure\n";
