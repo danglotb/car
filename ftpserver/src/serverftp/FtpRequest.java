@@ -121,7 +121,7 @@ public class FtpRequest extends Thread {
 			rep = processPass(sc.next());
 			break;
 		case DefConstant.CWD:
-			rep = DefConstant.CWDOK;
+			rep = processCWD(sc.next());
 			break;
 		case DefConstant.PWD:
 			System.out.println(257 + " " + this.currentDirectory + "\n");
@@ -277,6 +277,7 @@ public class FtpRequest extends Thread {
 				e.printStackTrace();
 				return DefConstant.FILE_ERROR;
 			}
+		
 
 			try {
 				this.dataSocket = new Socket(adr, port);
@@ -304,7 +305,7 @@ public class FtpRequest extends Thread {
 		OutputStream out;
 		DataOutputStream db;
 		
-		File directory = new File(this.currentDirectory.substring(1));
+		File directory = new File(this.currentDirectory);
 		File[] files = directory.listFiles();
 		
 		
@@ -330,21 +331,24 @@ public class FtpRequest extends Thread {
 		}
 		return DefConstant.FILE_TRANSFERT_SUCCESSFUL;
 	}
-
+	
+	/** 
+	 * Must be absolute Path
+	 * @param directory new directory
+	 * @return
+	 */
+	public String processCWD(String directory) {
+		this.currentDirectory = directory;
+		return DefConstant.CWDOK;
+	}
+	
+	
 	/**
 	 * method process the type request
 	 * 
 	 * @return
 	 */
 	public String processType() {
-	/*	OutputStream out;
-		try {
-			out = this.serv.getOutputStream();
-			DataOutputStream db = new DataOutputStream(out);
-		//	db.writeBytes(DefConstant.SEND_TYPE);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 		return DefConstant.ACCEPT_TYPE;
 	}
 
