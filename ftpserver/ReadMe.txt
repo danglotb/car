@@ -10,6 +10,9 @@ Introduction :
 Implémentation d'un serveur FTP en java. Il respecte le RFC 959. 
 (http://fr.wikipedia.org/wiki/File_Transfer_Protocol)
 
+Exécution :
+	Pour exécuter le jar, utiliser la commande java -jar ftpServer.jar
+
 Architecture : 
 
 package 'serverftp':
