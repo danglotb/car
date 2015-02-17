@@ -181,24 +181,7 @@ public class FtpRequestTest {
 			bf = new BufferedReader(new InputStreamReader(in));
 			msg = bf.readLine();
 			
-			assertEquals(DefConstant.ACCEPT_REQ, msg+"\n");
-			
-			data = dataSocket.accept();
-			
-			in = data.getInputStream();
-			bf = new BufferedReader(new InputStreamReader(in));
-			msg = bf.readLine();
-			
-			
-			/* get the file 
-			
-			in = client.getInputStream();
-			bf = new BufferedReader(new InputStreamReader(in));
-			msg = bf.readLine();
-			
-			assertTrue((msg+"\n").equals(DefConstant.FILE_TRANSFERT_SUCCESSFUL));
-			
-			*/
+			assertEquals(DefConstant.FILE_TRANSFERT_SUCCESSFUL, msg+"\n");
 			
 		} catch (IOException e) {
 			e.printStackTrace();

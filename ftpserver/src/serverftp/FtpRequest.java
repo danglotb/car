@@ -400,6 +400,7 @@ public class FtpRequest extends Thread {
 		this.adr += "." + sc.next();
 		this.port = Integer.parseInt(sc.next()) * 256
 				+ Integer.parseInt(sc.next());
+		sc.close();
 		return DefConstant.ACCEPT_PORT;
 	}
 
