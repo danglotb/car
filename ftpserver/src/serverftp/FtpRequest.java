@@ -97,7 +97,8 @@ public class FtpRequest extends Thread {
 			try {
 				processRequest();
 			} catch (IOException e) {
-				e.printStackTrace();
+				end = true;
+				System.out.println("Client connection lost");
 			}
 		}
 	}

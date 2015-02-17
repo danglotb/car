@@ -242,7 +242,14 @@ public class FtpRequestTest {
 	}
 	
 	public void testProcessQUIT() {
-		
+		try {
+			msg = DefConstant.QUIT+"\n";
+			/* envoie de la commande PASV*/
+			out = client.getOutputStream();
+			db = new DataOutputStream(out);
+			db.writeBytes(msg);
+		} catch (Exception e) {}
+//		}
 	}
 	
 	/** 
@@ -277,6 +284,12 @@ public class FtpRequestTest {
 //			db.writeBytes(msg);
 //
 //			/* test de la reponse du server */
+//	
+//				in = client.getInputStream();
+//				bf = new BufferedReader(new InputStreamReader(in));
+//				msg = bf.readLine();
+//				
+//				assertTrue((msg+"\n").equals(DefConstant.ACCEPT_PASV));
 //		
 //			data = new Socket("localhost", DefConstant.DATA_PORT);
 //			
