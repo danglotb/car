@@ -134,6 +134,9 @@ public class FtpRequest extends Thread {
 			else
 				rep = processCWD(rootDirectory);
 			break;
+		case DefConstant.CDUP:
+			rep = processCWD("..");
+			break;
 		case DefConstant.PWD:
 		case DefConstant.XPWD:
 			System.out.println(257 + " " + this.currentDirectory + "\n");
@@ -348,7 +351,15 @@ public class FtpRequest extends Thread {
 	 * @return
 	 */
 	public String processCWD(String directory) {
-		this.currentDirectory = directory;
+		Path path = Paths.get(this.currentDirectory);
+		System.out.println(path.toString());
+		System.out.println(this.rootDirectory);
+		if(directory.equals("..") || directory.equals(".")) {
+			if(this.currentDirectory != this.rootDirectory)
+				this.currentDirectory = path.getParent().toString();
+		} else {
+			this.currentDirectory = directory;
+		}
 		return DefConstant.CWDOK;
 	}
 
