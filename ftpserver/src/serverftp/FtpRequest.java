@@ -428,7 +428,6 @@ public class FtpRequest extends Thread {
 			this.dataSocket = this.dataServerSocket.accept();
 
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		return DefConstant.SEND_TYPE;
 	}
