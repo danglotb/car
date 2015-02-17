@@ -14,10 +14,13 @@ Exécution :
 	Pour exécuter le jar, utiliser la commande java -jar FtpServer.jar filesys
 
 <filesys> est le systeme fournit, on peut en utiliser un autre, mais il doit posseder à sa racine un 
-fichier .account, qui contient les couples user:password
+fichier .account, qui contient les couples user:password afin de permettre l'authentification des 
+utilisateurs.
 
 le fichier .account contient deux couples exemple : 	toto:toto
 							usr:pass
+
+le fichier teststor permet au test unitaire de bien fonctionner.
 
 Architecture : 
 
