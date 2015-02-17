@@ -111,6 +111,7 @@ public class FtpRequest extends Thread {
 		sc.useDelimiter(" ");
 		String type = sc.next();
 		String rep = "";
+		System.out.println(">>>"+type);
 		if (type != DefConstant.USER && this.user.equals(""))
 			rep = DefConstant.NEED_USER;
 		/* switching on the type of the request */
@@ -334,7 +335,8 @@ public class FtpRequest extends Thread {
 			out = this.serv.getOutputStream();
 			DataOutputStream db = new DataOutputStream(out);
 			db.writeBytes(DefConstant.SEND_TYPE);
-		} catch (IOException e) {
+			processPasv();	
+		}catch (IOException e) {
 			e.printStackTrace();
 		}
 		return DefConstant.ACCEPT_TYPE;
@@ -391,21 +393,6 @@ public class FtpRequest extends Thread {
 			e.printStackTrace();
 		}
 		return DefConstant.ACCEPT_PASV;
-	}
-
-	/**
-	 * proxy method for create the good dataSocket (passiv or activ)
-	 */
-	public void openDataSocket() {
-		InputStream in;
-		try {
-			in = this.serv.getInputStream();
-			BufferedReader bf = new BufferedReader(new InputStreamReader(in));
-			String req = bf.readLine();
-			System.out.println(req);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 }
