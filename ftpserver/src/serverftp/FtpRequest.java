@@ -135,6 +135,7 @@ public class FtpRequest extends Thread {
 				rep = processCWD(rootDirectory);
 			break;
 		case DefConstant.PWD:
+		case DefConstant.XPWD:
 			System.out.println(257 + " " + this.currentDirectory + "\n");
 			rep = DefConstant.SEND_PATH + this.currentDirectory + "\n";
 			break;

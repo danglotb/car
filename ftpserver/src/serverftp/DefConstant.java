@@ -20,6 +20,7 @@ public class DefConstant {
 	public static final String NLST = "NLST";
 	public static final String FEAT = "FEAT";
 	public static final String PWD  = "PWD";
+	public static final String XPWD  = "XPWD";
 	public static final String CWD  = "CWD";
 	public static final String CDUP = "CDUP";
 	public static final String TYPE = "TYPE";
