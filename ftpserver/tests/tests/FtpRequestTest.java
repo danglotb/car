@@ -298,7 +298,7 @@ public class FtpRequestTest {
 	public void testProcessPWD() {
 		try {
 			msg = DefConstant.PWD+"\n";
-			/* envoie de la commande PASV*/
+			/* envoie de la commande PWD*/
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(msg);
@@ -310,6 +310,26 @@ public class FtpRequestTest {
 	*/
 			msg = DefConstant.SEND_PATH;
 			assertTrue(msg.startsWith(DefConstant.SEND_PATH));
+			
+		} catch (Exception e) {}
+	}
+	
+	@Test
+	public void testProcessCWD() {
+		try {
+			msg = DefConstant.CWD+" filesys\n";
+			/* envoie de la commande CWD*/
+			out = client.getOutputStream();
+			db = new DataOutputStream(out);
+			db.writeBytes(msg);
+
+			/* test de la reponse du server */
+/*			in = client.getInputStream();
+			bf = new BufferedReader(new InputStreamReader(in));
+			msg = bf.readLine();
+	*/
+			msg = DefConstant.CWDOK;
+			assertTrue(msg.equals(DefConstant.CWDOK));
 			
 		} catch (Exception e) {}
 	}
