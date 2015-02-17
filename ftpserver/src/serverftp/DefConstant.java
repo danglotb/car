@@ -43,6 +43,6 @@ public class DefConstant {
 	public static final String TCP_CONNECTION_FAILURE = "426 TCP connection broken by client or network failure\n";
 	public static final String FILE_ERROR = "451 File read or write error\n";
 	public static final String WRONG_USER_OR_PASS = "430 Invalid username or password.\n";
-
+	public static final String CLOSE_CONNECTION = "221 Service cloising control connection.\n";
 	
 }

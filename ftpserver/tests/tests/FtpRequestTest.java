@@ -241,17 +241,6 @@ public class FtpRequestTest {
 		}
 	}
 	
-	public void testProcessQUIT() {
-		try {
-			msg = DefConstant.QUIT+"\n";
-			/* envoie de la commande PASV*/
-			out = client.getOutputStream();
-			db = new DataOutputStream(out);
-			db.writeBytes(msg);
-		} catch (Exception e) {}
-//		}
-	}
-	
 	/** 
 	 * a copy of the test Process, in order to test the changement of the type of the data connection
 	 */

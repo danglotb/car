@@ -368,7 +368,7 @@ public class FtpRequest extends Thread {
 	 */
 	public String processQuit() {
 		this.end = true;
-		return "";
+		return DefConstant.CLOSE_CONNECTION;
 	}
 
 	/**
