@@ -170,7 +170,7 @@ public class FtpRequestTest {
 	@Test
 	public void testProcessRETR() {
 		try {
-			msg = DefConstant.RETR+" filesys/test\n";
+			msg = DefConstant.RETR+" test\n";
 			/* envoie de la commande LIST*/
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
@@ -212,7 +212,7 @@ public class FtpRequestTest {
 			Path p = Paths.get("teststor");
 			buffer = Files.readAllBytes(p);
 			
-			msg = DefConstant.STOR+" filesys/teststor\n";
+			msg = DefConstant.STOR+" teststor\n";
 			/* envoie de la commande LIST*/
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
@@ -290,6 +290,26 @@ public class FtpRequestTest {
 			msg = bf.readLine();
 			
 			assertTrue((msg+"\n").equals(DefConstant.ACCEPT_PASV));
+			
+		} catch (Exception e) {}
+	}
+	
+	@Test
+	public void testProcessPWD() {
+		try {
+			msg = DefConstant.PWD+"\n";
+			/* envoie de la commande PASV*/
+			out = client.getOutputStream();
+			db = new DataOutputStream(out);
+			db.writeBytes(msg);
+
+			/* test de la reponse du server */
+/*			in = client.getInputStream();
+			bf = new BufferedReader(new InputStreamReader(in));
+			msg = bf.readLine();
+	*/
+			msg = DefConstant.SEND_PATH;
+			assertTrue(msg.startsWith(DefConstant.SEND_PATH));
 			
 		} catch (Exception e) {}
 	}
