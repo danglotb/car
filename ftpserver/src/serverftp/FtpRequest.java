@@ -100,7 +100,6 @@ public class FtpRequest extends Thread {
 
 	/**
 	 * Method processing request
-	 * 
 	 * @throws IOException
 	 */
 	public void processRequest() throws IOException {
@@ -112,7 +111,7 @@ public class FtpRequest extends Thread {
 		String type = sc.next();
 		String rep = "";
 		if (type != DefConstant.USER && this.user.equals(""))
-			rep = DefConstant.NEED_USER;
+			rep = DefConstant.NEED_USER; 
 		/* switching on the type of the request */
 		switch (type) {
 		case DefConstant.USER:
@@ -192,7 +191,6 @@ public class FtpRequest extends Thread {
 			try {
 				this.dataSocket = new Socket(adr, port);
 				in = this.dataSocket.getInputStream();
-				;
 				bf = new BufferedReader(new InputStreamReader(in));
 				buffer = bf.readLine().getBytes();
 			} catch (IOException e) {
@@ -313,6 +311,7 @@ public class FtpRequest extends Thread {
 			db.writeBytes(DefConstant.ACCEPT_REQ);
 			
 			this.dataSocket = new Socket(adr, port);
+			
 			out = this.dataSocket.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(fileList + "\n");
@@ -361,7 +360,7 @@ public class FtpRequest extends Thread {
 	public String processPort(String args) {
 		Scanner sc = new Scanner(args);
 		sc.useDelimiter(",");
-		this.passivConnection = true;
+		this.passivConnection = false;
 		this.adr = sc.next();
 		this.adr += "."+sc.next();
 		this.adr += "."+sc.next();
@@ -387,6 +386,7 @@ public class FtpRequest extends Thread {
 			
 			this.dataServerSocket = new ServerSocket(DefConstant.DATA_PORT);
 			this.dataSocket = this.dataServerSocket.accept();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
