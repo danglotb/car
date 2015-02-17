@@ -33,8 +33,9 @@ public class DefConstant {
 	public static final String SYST_INFO = "215 UNIX Type: L8\n";
 	public static final String FEAT_ERR = "211 no-features\n";
 	public static final String SEND_PATH = "257 ";
+	public static final String CWDOK = "250 okay\n";
 	public static final String SEND_TYPE = "150 File status okay; about to open data connection.\n";
-	public static final String ACCEPT_TYPE = "200\n";
+	public static final String ACCEPT_TYPE = "200 accept Type\n";
 	public static final String ACCEPT_REQ = "150  Starting file transfer\n";
 	public static final String ACCEPT_PASV = "227 =127,0,0,1,"+DATA_PORT/256+","+DATA_PORT%256+"\n";
 	public static final String ACCEPT_PORT = "200 data connection PORT\n";

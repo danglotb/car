@@ -74,6 +74,7 @@ public class FtpRequest extends Thread {
 		// understand by ftp client otherwise
 		this.currentDirectory = (directory.startsWith("\\") ? directory : "\\"
 				+ directory);
+		this.currentDirectory=directory;
 		OutputStream out;
 		try {
 			out = serv.getOutputStream();
@@ -111,9 +112,6 @@ public class FtpRequest extends Thread {
 		System.out.println(">>"+req);
 		String type = sc.next();
 		String rep = "";
-/*		if (type != DefConstant.USER && this.user.equals(""))
-			rep = DefConstant.NEED_USER;
-		/* switching on the type of the request */
 		switch (type) {
 		case DefConstant.USER:
 		case DefConstant.AUTH:
@@ -121,6 +119,9 @@ public class FtpRequest extends Thread {
 			break;
 		case DefConstant.PASS:
 			rep = processPass(sc.next());
+			break;
+		case DefConstant.CWD:
+			rep = DefConstant.CWDOK;
 			break;
 		case DefConstant.PWD:
 			System.out.println(257 + " " + this.currentDirectory + "\n");
@@ -186,7 +187,7 @@ public class FtpRequest extends Thread {
 	 * @return
 	 */
 	public String processStor(String fileName) {
-		Path path = Paths.get(fileName);
+		Path path = Paths.get(this.currentDirectory+"/"+fileName);
 		OutputStream out;
 		DataOutputStream db;
 		InputStream in;
@@ -261,7 +262,7 @@ public class FtpRequest extends Thread {
 	 *            : file to be sent on the server (
 	 */
 	public String processRetr(String fileName) {
-		Path path = Paths.get(fileName);
+		Path path = Paths.get(this.currentDirectory+"/"+fileName);
 		OutputStream out;
 		DataOutputStream db;
 		byte[] buffer;
@@ -336,14 +337,14 @@ public class FtpRequest extends Thread {
 	 * @return
 	 */
 	public String processType() {
-		OutputStream out;
+	/*	OutputStream out;
 		try {
 			out = this.serv.getOutputStream();
 			DataOutputStream db = new DataOutputStream(out);
-			db.writeBytes(DefConstant.SEND_TYPE);
+		//	db.writeBytes(DefConstant.SEND_TYPE);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 		return DefConstant.ACCEPT_TYPE;
 	}
 
