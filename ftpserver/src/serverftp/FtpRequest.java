@@ -68,7 +68,7 @@ public class FtpRequest extends Thread {
 	 */
 	public FtpRequest(Socket serv, String directory) {
 		this.serv = serv;
-		this.user = "";
+		this.user = DefConstant.ANONYMOUS;
 		this.passivConnection = false;
 		// Adding "\" before directory name if not already here, won't be
 		// understand by ftp client otherwise
@@ -108,10 +108,11 @@ public class FtpRequest extends Thread {
 		String req = bf.readLine();
 		Scanner sc = new Scanner(req);
 		sc.useDelimiter(" ");
+		System.out.println(">>"+req);
 		String type = sc.next();
 		String rep = "";
-		if (type != DefConstant.USER && this.user.equals(""))
-			rep = DefConstant.NEED_USER; 
+/*		if (type != DefConstant.USER && this.user.equals(""))
+			rep = DefConstant.NEED_USER;
 		/* switching on the type of the request */
 		switch (type) {
 		case DefConstant.USER:
@@ -126,9 +127,11 @@ public class FtpRequest extends Thread {
 			rep = DefConstant.SEND_PATH + this.currentDirectory + "\n";
 			break;
 		case DefConstant.PORT:
+			System.out.println(DefConstant.PORT);
 			rep = processPort(sc.next());
 			break;
 		case DefConstant.PASV:
+			System.out.println(DefConstant.PASV);
 			rep = processPasv();
 			break;
 		case DefConstant.LIST:
@@ -151,8 +154,13 @@ public class FtpRequest extends Thread {
 			rep = processRetr(sc.next());
 			break;
 		case DefConstant.STOR:
-			System.out.print(DefConstant.STOR);
-			rep = processStor(sc.next());
+			if (this.user.equals(DefConstant.ANONYMOUS)) {
+				System.out.print(DefConstant.NEED_USER);
+				rep = DefConstant.NEED_USER;
+			} else {
+				System.out.print(DefConstant.STOR);
+				rep = processStor(sc.next());
+			}
 			break;
 		case DefConstant.QUIT:
 			rep = processQuit();
@@ -171,7 +179,7 @@ public class FtpRequest extends Thread {
 
 	
 	/**
-	 * method processing STOR equest
+	 * method processing STOR request
 	 * 
 	 * @param req
 	 *            : filename
@@ -270,7 +278,6 @@ public class FtpRequest extends Thread {
 			}
 
 			try {
-
 				this.dataSocket = new Socket(adr, port);
 				out = this.dataSocket.getOutputStream();
 				db = new DataOutputStream(out);
@@ -309,13 +316,14 @@ public class FtpRequest extends Thread {
 			out = this.serv.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(DefConstant.ACCEPT_REQ);
-			
-			this.dataSocket = new Socket(adr, port);
+			if (!this.passivConnection) 
+				this.dataSocket = new Socket(adr, port);
 			
 			out = this.dataSocket.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(fileList + "\n");
-			this.dataSocket.close();
+			if (!this.passivConnection) 
+				this.dataSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -381,7 +389,7 @@ public class FtpRequest extends Thread {
 			out = this.serv.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(DefConstant.ACCEPT_PASV);
-			
+	
 			this.passivConnection = true;
 			
 			this.dataServerSocket = new ServerSocket(DefConstant.DATA_PORT);
@@ -392,21 +400,4 @@ public class FtpRequest extends Thread {
 		}
 		return DefConstant.ACCEPT_PASV;
 	}
-
-	/**
-	 * proxy method for create the good dataSocket (passiv or activ)
-	 */
-	public void openDataSocket() {
-		InputStream in;
-		try {
-			in = this.serv.getInputStream();
-			BufferedReader bf = new BufferedReader(new InputStreamReader(in));
-			String req = bf.readLine();
-			System.out.println(req);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
 }
