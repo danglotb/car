@@ -34,6 +34,12 @@ public class File {
 		this.path = path;
 	}
 	
+	public int hashCode() {
+		return path.hashCode();
+	}
 	
+	public boolean equals(File file) {
+		return this.hashCode() == file.hashCode();
+	}
 
 }
