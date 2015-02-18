@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.example.model.File;
 import com.example.model.Person;
 import com.example.services.FileService;
 
@@ -20,8 +21,8 @@ public class FileRestService {
 	
 	@Produces( { MediaType.APPLICATION_JSON } )
 	@GET
-	public String getName( @QueryParam( "page") @DefaultValue( "1" ) final int page ) {
-		return null;
+	public File getFile(@QueryParam( "filePath") final String filePath) {
+		return fileService.getByPath(filePath);
 	}
 	
 }
