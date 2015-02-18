@@ -1,6 +1,6 @@
 package com.example.services;
 
-import java.io.File;
+import com.example.model.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,7 +27,7 @@ public class FileService {
 		return slice;
 	}
 	
-	public File getByPath(final String filePath) throws FileNotFoundException {
+	public File getByPath(final String filePath) {
 		final File file = files.get(filePath);	
 		if(file == null) {
 			throw new FileNotFoundException(filePath);
