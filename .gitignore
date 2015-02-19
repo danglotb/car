@@ -13,4 +13,7 @@ hs_err_pid*
 
 .classpath
 .project
-./serverREST/.classpath
+ftpserver/.classpath
+ftpserver/.project
+serverREST/.classpath
+serverREST/.project
