@@ -1,7 +1,7 @@
 package com.example.exceptions;
 
 
-public class FileNotFoundException extends Exception {
+public class FileNotFoundException extends WebApplicationException {
 
 	private static final long serialVersionUID = 8651274799054282354L;
 
