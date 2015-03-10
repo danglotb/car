@@ -11,7 +11,16 @@ Implémentation d'un serveur FTP en java. Il respecte le RFC 959.
 (http://fr.wikipedia.org/wiki/File_Transfer_Protocol)
 
 Exécution :
-	Pour exécuter le jar, utiliser la commande java -jar ftpServer.jar
+	Pour exécuter le jar, utiliser la commande java -jar FtpServer.jar filesys
+
+<filesys> est le systeme fournit, on peut en utiliser un autre, mais il doit posseder à sa racine un 
+fichier .account, qui contient les couples user:password afin de permettre l'authentification des 
+utilisateurs.
+
+le fichier .account contient deux couples exemple : 	toto:toto
+							usr:pass
+
+le fichier teststor permet au test unitaire de bien fonctionner.
 
 Architecture : 
 
