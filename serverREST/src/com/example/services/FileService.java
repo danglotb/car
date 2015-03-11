@@ -1,30 +1,49 @@
 package com.example.services;
 
-import com.example.model.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import serverftp.DefConstant;
+
 import com.example.exceptions.FileAlreadyExistsException;
 import com.example.exceptions.FileNotFoundException;
+import com.example.model.File;
 
 public class FileService {
-	private final ConcurrentMap<String, File> files = new ConcurrentHashMap<String, File>();
+	private ConcurrentMap<String, File> files = new ConcurrentHashMap<String, File>();
+	
+	private OutputStream out;
+	private DataOutputStream db;
+	private InputStream in;
+	private BufferedReader bf;
 	
 		
-	public Collection< File > getFile( int page, int pageSize ) {
-		final Collection< File > slice = new ArrayList< File >( pageSize );
+	public String getFile() {
+		String msg = DefConstant.LIST+"\n";
+		try {
+			
+			Socket client;
+			client = new Socket("localhost", 1032);
+			
+			out = client.getOutputStream();
+			db = new DataOutputStream(out);
+			db.writeBytes(msg);
+			
+			in = client.getInputStream();
+			bf.readLine();
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}//TODO : CHANGE DAT SHIT
 		
-        final Iterator< File > iterator = files.values().iterator();
-        for( int i = 0; slice.size() < pageSize && iterator.hasNext(); ) {
-        	if( ++i > ( ( page - 1 ) * pageSize ) ) {
-        		slice.add( iterator.next() );
-        	}
-        }
-		
-		return slice;
+		return null;
 	}
 	
 	public File getByPath(final String filePath) {

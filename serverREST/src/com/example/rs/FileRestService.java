@@ -34,15 +34,14 @@ public class FileRestService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response addFile(@Context final UriInfo uriInfo ,@FormParam("name") String name, @FormParam("filePath") String filePath){
 		fileService.addFile(filePath, name);
-		System.out.println("name " + name + "filepath : " + filePath);
+		System.out.println("name " + name + " filepath : " + filePath);
 		return Response.created(uriInfo.getRequestUriBuilder().path(name).build()).build();
 	}
 	
-	@Produces({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.TEXT_HTML })
 	@GET
-	public Collection<File> getFiles(
-			@QueryParam("page") @DefaultValue("1") final int page) {
-		return fileService.getFile(page, 5);
+	public String getFiles() {
+		return fileService.getFile();
 	}
 
 	@Produces({ MediaType.APPLICATION_JSON })
