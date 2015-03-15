@@ -16,6 +16,8 @@ import org.springframework.context.annotation.DependsOn;
 
 import car.HelloWorldResource;
 
+import com.example.rs.ConnectionServerService;
+import com.example.rs.FileRestService;
 import com.example.rs.JaxRsApiApplication;
 import com.example.rs.PeopleRestService;
 import com.example.services.PeopleService;
@@ -34,6 +36,8 @@ public class AppConfig {
 		List<Object> serviceBeans = new ArrayList<Object>();
 		serviceBeans.add(peopleRestService());
 		serviceBeans.add(new HelloWorldResource());
+		serviceBeans.add(new FileRestService());
+		serviceBeans.add(new ConnectionServerService());
 		
 		factory.setServiceBeans(serviceBeans);
 		factory.setAddress( "/" + factory.getAddress() );
