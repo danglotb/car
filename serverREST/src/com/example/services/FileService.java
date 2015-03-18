@@ -51,37 +51,28 @@ public class FileService {
 	public String getFileList() {
 		Socket data;
 		ServerSocket dataSocket;
-		String msg = DefConstant.LIST + "\n";
+		Socket client = Starter.connect();
+		String msg;
 		String htmlCode;
 		htmlCode = "<html>";
-		try {
-
-			dataSocket = new ServerSocket(8224);
-
-			Socket client = Starter.connect();
-			in = client.getInputStream();
-			bf = new BufferedReader(new InputStreamReader(in));
-			bf.readLine();
-
-			/*
-			 * Check if it is good if
-			 * (DefConstant.ACCEPT_REQ.equals(bf.readLine())) and then configure
-			 * the data connection
-			 */
-
+		try {	
 			/* Sending the request PORT config the data connection */
-			db.writeBytes(DefConstant.PORT + " 127,0,0,1,32,32\n");
+			msg = DefConstant.PORT + " 127,0,0,1,32,32\n";
+			out = client.getOutputStream();
+			db = new DataOutputStream(out);
+			db.writeBytes(msg);
 
 			in = client.getInputStream();
 			bf = new BufferedReader(new InputStreamReader(in));
 			bf.readLine();
-
+			
 			/*
 			 * Check if it is good if
 			 * (DefConstant.ACCEPT_PORT.equals(bg.readLine()+"\n")) and then
 			 * open the data Socket
 			 */
-
+			
+			dataSocket = new ServerSocket(7899);
 			data = dataSocket.accept();
 
 			in = data.getInputStream();
@@ -91,7 +82,7 @@ public class FileService {
 				htmlCode += msg + "</ br>";
 			}
 
-			System.err.println(htmlCode);
+			System.out.println(htmlCode);
 
 			dataSocket.close();
 

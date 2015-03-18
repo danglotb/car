@@ -1,10 +1,5 @@
 package com.example.rs;
 
-<<<<<<< HEAD
-import java.net.Socket;
-
-=======
->>>>>>> 772eed6efe9df5c09f5a6fb7d2eb3d2dc46281e8
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -18,11 +13,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-<<<<<<< HEAD
-import com.example.Starter;
-import com.example.model.File;
-=======
->>>>>>> 772eed6efe9df5c09f5a6fb7d2eb3d2dc46281e8
 import com.example.services.FileService;
 
 @Path("/file")
