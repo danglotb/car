@@ -1,10 +1,9 @@
 package com.example.rs;
 
-import java.util.Collection;
+import java.net.Socket;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,11 +15,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.example.Starter;
 import com.example.model.File;
 import com.example.services.FileService;
 
 @Path("/file")
-@Consumes(MediaType.APPLICATION_JSON)
+//@Consumes(MediaType.APPLICATION_JSON)
 public class FileRestService {
 	
 	@Inject	
@@ -38,10 +38,10 @@ public class FileRestService {
 		return Response.created(uriInfo.getRequestUriBuilder().path(name).build()).build();
 	}
 	
-	@Produces({ MediaType.TEXT_HTML })
+	@Produces({ MediaType.APPLICATION_JSON})
 	@GET
-	public String getFiles() {
-		return fileService.getFile();
+	public String getFileList() {
+		return fileService.getFileList();
 	}
 
 	@Produces({ MediaType.APPLICATION_JSON })
