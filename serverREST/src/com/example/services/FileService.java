@@ -22,7 +22,6 @@ public class FileService {
 	private DataOutputStream db;
 	private InputStream in;
 	private BufferedReader bf;
-	
 		
 	public String getFile() {
 		String msg = DefConstant.LIST+"\n";
@@ -37,6 +36,8 @@ public class FileService {
 			
 			in = client.getInputStream();
 			bf.readLine();
+			
+			System.out.println();
 			
 			
 		} catch (IOException e) {
