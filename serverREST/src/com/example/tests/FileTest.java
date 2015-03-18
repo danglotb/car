@@ -23,7 +23,7 @@ public class FileTest {
 	protected File createFile(String filePath, String name){
 		File file = new File(filePath, name);
 		Entity<File> fileEntity = Entity.entity(file, MediaType.APPLICATION_JSON);
-		File savedFile = target("/" + filePath).request(fileEntity).readEntity(File.class);
+		//File savedFile = target("/" + filePath).request(fileEntity).readEntity(File.class);
 		
 		return file;
 	}
