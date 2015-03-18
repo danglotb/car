@@ -1,16 +1,19 @@
 package com.example.rs;
 
+import java.io.File;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.example.services.FileService;
@@ -40,12 +43,16 @@ public class FileRestService {
 		return fileService.getFile();
 	}
 
-	@Produces({ MediaType.APPLICATION_JSON })
+	@Produces({MediaType.APPLICATION_OCTET_STREAM})
 	@Path("/{filePath}")
 	@GET
-	public String getFile(@QueryParam("filePath") String filePath) {
-		System.out.println(filePath);
-		return filePath;
+	public Response getFile(@PathParam("filePath") String filePath) {
+		System.out.println("filePath : " + filePath);
+		File file = new File("/home/m1/philippe/Documents/car/ftpserver/filesys/" + filePath);
+	    ResponseBuilder response = Response.ok((Object) file);
+	    response.header("Content-Disposition",
+	        "attachment; filename=" + file.getName());
+	    return response.build();
 	}
 
 }

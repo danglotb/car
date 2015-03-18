@@ -49,7 +49,7 @@ public class FileService {
 		return null;
 	}
 	
-	public String getByPath(String filePath) {
+	public java.io.File getByPath(String filePath) {
 		Socket client = Starter.connect();
 		String msg = "";
 		try {
@@ -82,7 +82,7 @@ public class FileService {
 			e.printStackTrace();
 		}
 		
-		return filePath;
+		return new java.io.File(filePath);
 	}
 
 	public File addFile(String filePath, String name) {
