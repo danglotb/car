@@ -68,9 +68,7 @@ public class Starter {
 		} catch (Exception e) {
 			
 		}
-		
 		return client;
-		
 	}
 	
 }
