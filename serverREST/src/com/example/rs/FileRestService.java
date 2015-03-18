@@ -2,8 +2,6 @@ package com.example.rs;
 
 import java.io.File;
 
-import java.net.Socket;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -18,7 +16,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.example.Starter;
 import com.example.services.FileService;
 
 @Path("/file")
