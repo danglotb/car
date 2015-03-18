@@ -293,6 +293,7 @@ public class FtpRequest extends Thread {
 			}
 
 			try {
+				System.out.println("adr : " + adr + " port : " + port);
 				this.dataSocket = new Socket(adr, port);
 				out = this.dataSocket.getOutputStream();
 				db = new DataOutputStream(out);

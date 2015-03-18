@@ -48,8 +48,8 @@ public class FileRestService {
 	@GET
 	public Response getFile(@PathParam("filePath") String filePath) {
 		System.out.println("filePath : " + filePath);
-		File file = new File("/home/m1/philippe/Documents/car/ftpserver/filesys/" + filePath);
-	    ResponseBuilder response = Response.ok((Object) file);
+		File file = fileService.getByPath(filePath);
+		ResponseBuilder response = Response.ok((Object) file);
 	    response.header("Content-Disposition",
 	        "attachment; filename=" + file.getName());
 	    return response.build();
