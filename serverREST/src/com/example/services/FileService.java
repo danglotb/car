@@ -1,7 +1,9 @@
 package com.example.services;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -109,6 +111,10 @@ public class FileService {
 
 		Socket client = Starter.connect();
 		String msg = "";
+		InputStream input;
+		DataInputStream dataIn;
+		BufferedReader buffer;
+		byte[] buff = null;
 		try {
 			msg = DefConstant.PORT + " 127,0,0,1,32,32\n";
 			/* envoie de la commande PORT */
@@ -126,10 +132,20 @@ public class FileService {
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(msg);
+			
+			Socket dataSocket = new ServerSocket(8224).accept();
+			input = dataSocket.getInputStream();		
+			dataIn = new DataInputStream(input);	
 
 			in = client.getInputStream();
 			bf = new BufferedReader(new InputStreamReader(in));
 			msg = bf.readLine();
+			
+			//TODO:fix bug, buff = null
+			dataIn.read(buff);
+			FileOutputStream file = new FileOutputStream(filePath);
+			file.write(buff);
+			file.close();
 
 		} catch (IOException e) {
 			e.printStackTrace();
