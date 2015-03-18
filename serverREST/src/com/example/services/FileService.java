@@ -62,23 +62,29 @@ public class FileService {
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(msg);
-
+			/* Check the response */
 			in = client.getInputStream();
 			bf = new BufferedReader(new InputStreamReader(in));
-			bf.readLine();
+			System.out.println(bf.readLine());
 			
-			/*
-			 * Check if it is good if
-			 * (DefConstant.ACCEPT_PORT.equals(bg.readLine()+"\n")) and then
-			 * open the data Socket
-			 */
+			/* Send List Req */
+			msg = DefConstant.LIST+"\n";
+			out = client.getOutputStream();
+			db = new DataOutputStream(out);
+			db.writeBytes(msg);
+			/* Check the response*/
+			in = client.getInputStream();
+			bf = new BufferedReader(new InputStreamReader(in));
+			System.out.println(bf.readLine());
 			
-			dataSocket = new ServerSocket(7899);
+			/* open the data socket */
+			dataSocket = new ServerSocket(8224);
+			System.out.println("SERVER SOCKET OPENNED");
 			data = dataSocket.accept();
-
+			System.out.println("DATA SOCKET OPENNED");
+			
 			in = data.getInputStream();
 			bf = new BufferedReader(new InputStreamReader(in));
-
 			while ((msg = bf.readLine()) != null) {
 				htmlCode += msg + "</ br>";
 			}
