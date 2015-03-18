@@ -20,6 +20,7 @@ import com.example.rs.ConnectionServerService;
 import com.example.rs.FileRestService;
 import com.example.rs.JaxRsApiApplication;
 import com.example.rs.PeopleRestService;
+import com.example.services.FileService;
 import com.example.services.PeopleService;
 
 @Configuration
@@ -36,7 +37,7 @@ public class AppConfig {
 		List<Object> serviceBeans = new ArrayList<Object>();
 //		serviceBeans.add(peopleRestService());
 		serviceBeans.add(new HelloWorldResource());
-		serviceBeans.add(new FileRestService());
+		serviceBeans.add(fileRestService());
 		serviceBeans.add(new ConnectionServerService());
 		
 		factory.setServiceBeans(serviceBeans);
@@ -58,6 +59,16 @@ public class AppConfig {
 	@Bean 
 	public PeopleService peopleService() {
 		return new PeopleService();
+	}
+	
+	@Bean
+	public FileService fileService(){
+		return new FileService();
+	}
+	
+	@Bean
+	public FileRestService fileRestService(){
+		return new FileRestService();
 	}
 		
 	@Bean

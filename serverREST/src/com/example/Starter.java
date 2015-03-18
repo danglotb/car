@@ -38,8 +38,8 @@ public class Starter {
         server.join();	
 	}
 	
+	@SuppressWarnings("resource")
 	public static Socket connect() {
-		ServerSocket dataSocket;
 		Socket client = null;
 		InputStream in;
 		OutputStream out;
@@ -47,7 +47,6 @@ public class Starter {
 		DataOutputStream db;
 		String msg;
 		try {
-			dataSocket = new ServerSocket(8224);
 			client = new Socket("localhost", 1032);
 			in = client.getInputStream();
 			bf = new BufferedReader(new InputStreamReader(in));
