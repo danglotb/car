@@ -38,6 +38,7 @@ public class Starter {
         server.join();	
 	}
 	
+	@SuppressWarnings("resource")
 	public static Socket connect() {
 		Socket client = null;
 		InputStream in;

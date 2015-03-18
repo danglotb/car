@@ -20,115 +20,134 @@ import com.example.model.File;
 
 public class FileService {
 	private ConcurrentMap<String, File> files = new ConcurrentHashMap<String, File>();
-	
+
 	private OutputStream out;
 	private DataOutputStream db;
 	private InputStream in;
 	private BufferedReader bf;
-		
+
 	public String getFile() {
-		String msg = DefConstant.LIST+"\n";
+		String msg = DefConstant.LIST + "\n";
 		try {
-			
+
 			Socket client = Starter.connect();
-			
+
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(msg);
-			
+
 			in = client.getInputStream();
 			msg = bf.readLine();
-			
+
 			System.out.println(msg);
-			
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
-		}//TODO : CHANGE DAT SHIT
-		
+		}// TODO : CHANGE DAT SHIT
+
 		return null;
 	}
-	
+
 	public String getFileList() {
 		Socket data;
 		ServerSocket dataSocket;
-		String msg = DefConstant.LIST+"\n";
+		String msg = DefConstant.LIST + "\n";
 		String htmlCode;
-		htmlCode = "<html>"; 
+		htmlCode = "<html>";
 		try {
-			
+
 			dataSocket = new ServerSocket(8224);
-			
+
 			Socket client = Starter.connect();
-			
+			in = client.getInputStream();
+			bf = new BufferedReader(new InputStreamReader(in));
+			bf.readLine();
+
+			/*
+			 * Check if it is good if
+			 * (DefConstant.ACCEPT_REQ.equals(bf.readLine())) and then configure
+			 * the data connection
+			 */
+
+			/* Sending the request PORT config the data connection */
+			db.writeBytes(DefConstant.PORT + " 127,0,0,1,32,32\n");
+
+			in = client.getInputStream();
+			bf = new BufferedReader(new InputStreamReader(in));
+			bf.readLine();
+
+			/*
+			 * Check if it is good if
+			 * (DefConstant.ACCEPT_PORT.equals(bg.readLine()+"\n")) and then
+			 * open the data Socket
+			 */
+
+			data = dataSocket.accept();
+
+			in = data.getInputStream();
+			bf = new BufferedReader(new InputStreamReader(in));
+
+			while ((msg = bf.readLine()) != null) {
+				htmlCode += msg + "</ br>";
+			}
+
+			System.err.println(htmlCode);
+
+			dataSocket.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		htmlCode += "</html>";
+
+		return htmlCode;
+	}
+
+	public String getByPath(String filePath) {
+		Socket client = Starter.connect();
+		String msg = "";
+		try {
+			msg = DefConstant.PORT + " 127,0,0,1,32,32\n";
+			/* envoie de la commande PORT */
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(msg);
 			
+			/* test de la reponse du server */
 			in = client.getInputStream();
 			bf = new BufferedReader(new InputStreamReader(in));
-			bf.readLine();
-			
-			/* Check if it is good
-			if (DefConstant.ACCEPT_REQ.equals(bf.readLine()))
-				and then configure the data connection
-			*/
-			
-			/* Sending the request PORT config the data connection */
-			db.writeBytes(DefConstant.PORT+" 127,0,0,1,32,32\n");
-			
+			msg = bf.readLine();
+
+			msg = DefConstant.RETR + " " + filePath + "\n";
+			/* envoie de la commande LIST */
+			out = client.getOutputStream();
+			db = new DataOutputStream(out);
+			db.writeBytes(msg);
+
 			in = client.getInputStream();
 			bf = new BufferedReader(new InputStreamReader(in));
-			bf.readLine();
-			
-			/* Check if it is good 
-			if (DefConstant.ACCEPT_PORT.equals(bg.readLine()+"\n"))
-				and then open the data Socket
-			 */
-			
-			data = dataSocket.accept();
-			
-			in = data.getInputStream();
-			bf = new BufferedReader(new InputStreamReader(in));
-			
-			while ((msg = bf.readLine() ) != null) {
-				htmlCode += msg + "</ br>";
-			}
-			
-			System.err.println(htmlCode);
-			
-			dataSocket.close();
-			
+			msg = bf.readLine();
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		htmlCode += "</html>";
-		
-		return htmlCode;
- 	}
-	
-	public File getByPath(final String filePath) {
-		final File file = files.get(filePath);	
-		if(file == null) {
-			throw new FileNotFoundException(filePath);
-		}
-		return file;
+
+		return filePath;
 	}
 
 	public File addFile(String filePath, String name) {
-		File file = new File(filePath, name);			
-		if( files.putIfAbsent(filePath, file) != null ) {
+		File file = new File(filePath, name);
+		if (files.putIfAbsent(filePath, file) != null) {
 			throw new FileAlreadyExistsException(filePath);
 		}
 		return file;
 	}
-	
+
 	public void removeFile(String filePath) {
-		if( files.remove(filePath) == null ) {
+		if (files.remove(filePath) == null) {
 			throw new FileNotFoundException(filePath);
 		}
 	}
 
-	
 }
