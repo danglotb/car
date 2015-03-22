@@ -10,8 +10,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPClientConfig;
+import org.apache.commons.net.ftp.FTPFile;
 
 import serverftp.DefConstant;
 
@@ -50,58 +55,30 @@ public class FileService {
 		return null;
 	}
 
-
 	public String getFileList() {
-		Socket data;
-		ServerSocket dataSocket;
-		Socket client = Starter.connect();
-		String msg;
-		String htmlCode;
-		htmlCode = "<html>";
-		try {	
-			/* Sending the request PORT config the data connection */
-			msg = DefConstant.PORT + " 127,0,0,1,32,32\n";
-			out = client.getOutputStream();
-			db = new DataOutputStream(out);
-			db.writeBytes(msg);
-			/* Check the response */
-			in = client.getInputStream();
-			bf = new BufferedReader(new InputStreamReader(in));
-			System.out.println(bf.readLine());
-			
-			/* Send List Req */
-			msg = DefConstant.LIST+"\n";
-			out = client.getOutputStream();
-			db = new DataOutputStream(out);
-			db.writeBytes(msg);
-			/* Check the response*/
-			in = client.getInputStream();
-			bf = new BufferedReader(new InputStreamReader(in));
-			System.out.println(bf.readLine());
-			
-			/* open the data socket */
-			dataSocket = new ServerSocket(8224);
-			System.out.println("SERVER SOCKET OPENNED");
-			data = dataSocket.accept();
-			System.out.println("DATA SOCKET OPENNED");
-			
-			in = data.getInputStream();
-			bf = new BufferedReader(new InputStreamReader(in));
-			while ((msg = bf.readLine()) != null) {
-				htmlCode += msg + "</ br>";
+		String htmlCode = "<html>\n<table style\"=border: 1px solid black;\">\n";
+		FTPClient ftp = new FTPClient();
+		FTPClientConfig config = new FTPClientConfig();
+		ftp.configure(config);
+		try {
+			int reply;
+			ftp.connect("127.0.0.1",9874);
+			ftp.login("user","12345");
+			FTPFile[] files = ftp.listFiles();
+			Scanner sc;
+			for (FTPFile f : files) {
+				htmlCode += "<tr>\n";
+				sc = new Scanner(f.toFormattedString());
+				sc.useDelimiter("\t");
+				while (sc.hasNext()) 
+					htmlCode += "<td>"+sc.next()+"</td>";
+				htmlCode += "</tr>\n";
 			}
-
-			System.out.println(htmlCode);
-
-			dataSocket.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("Exception !");
 		}
-
-		htmlCode += "</html>";
-
-		return htmlCode;
+		
+		return htmlCode + "</table>\n</html>";
 	}
 
 	public java.io.File getByPath(String filePath) {
@@ -118,7 +95,7 @@ public class FileService {
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(msg);
-			
+
 			/* test de la reponse du server */
 			in = client.getInputStream();
 			bf = new BufferedReader(new InputStreamReader(in));
@@ -129,16 +106,16 @@ public class FileService {
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(msg);
-			
+
 			Socket dataSocket = new ServerSocket(8224).accept();
-			input = dataSocket.getInputStream();		
-			dataIn = new DataInputStream(input);	
+			input = dataSocket.getInputStream();
+			dataIn = new DataInputStream(input);
 
 			in = client.getInputStream();
 			bf = new BufferedReader(new InputStreamReader(in));
 			msg = bf.readLine();
-			
-			//TODO:fix bug, buff = null
+
+			// TODO:fix bug, buff = null
 			dataIn.read(buff);
 			FileOutputStream file = new FileOutputStream(filePath);
 			file.write(buff);
@@ -147,7 +124,7 @@ public class FileService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return new java.io.File(filePath);
 	}
 

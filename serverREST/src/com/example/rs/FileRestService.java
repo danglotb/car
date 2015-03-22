@@ -37,7 +37,7 @@ public class FileRestService {
 		return Response.created(uriInfo.getRequestUriBuilder().path(name).build()).build();
 	}
 	
-	@Produces({ MediaType.APPLICATION_JSON})
+	@Produces({"text/html"})
 	@GET
 	public String getFileList() {
 		return fileService.getFileList();
