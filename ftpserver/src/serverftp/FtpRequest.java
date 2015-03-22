@@ -293,6 +293,7 @@ public class FtpRequest extends Thread {
 			}
 
 			try {
+				System.out.println("adr : " + adr + " port : " + port);
 				this.dataSocket = new Socket(adr, port);
 				out = this.dataSocket.getOutputStream();
 				db = new DataOutputStream(out);
@@ -330,8 +331,10 @@ public class FtpRequest extends Thread {
 			out = this.serv.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(DefConstant.ACCEPT_REQ);
-			if (!this.passivConnection)
+			if (!this.passivConnection) {
+				System.out.println(adr+":"+port);
 				this.dataSocket = new Socket(adr, port);
+			}
 
 			out = this.dataSocket.getOutputStream();
 			db = new DataOutputStream(out);

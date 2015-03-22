@@ -24,7 +24,6 @@ public class FileTest {
 		File file = new File(filePath, name);
 		Entity<File> fileEntity = Entity.entity(file, MediaType.APPLICATION_JSON);
 	//	File savedFile = target("/" + filePath).request(fileEntity).readEntity(File.class);
-		
 		return file;
 	}
 }
