@@ -3,6 +3,8 @@ package com.example.services;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +25,6 @@ import serverftp.DefConstant;
 import com.example.Starter;
 import com.example.exceptions.FileAlreadyExistsException;
 import com.example.exceptions.FileNotFoundException;
-import com.example.model.File;
 
 public class FileService {
 	private ConcurrentMap<String, File> files = new ConcurrentHashMap<String, File>();
@@ -61,7 +62,6 @@ public class FileService {
 		FTPClientConfig config = new FTPClientConfig();
 		ftp.configure(config);
 		try {
-			int reply;
 			ftp.connect("127.0.0.1",9874);
 			ftp.login("user","12345");
 			FTPFile[] files = ftp.listFiles();
@@ -73,11 +73,11 @@ public class FileService {
 				while (sc.hasNext()) 
 					htmlCode += "<td>"+sc.next()+"</td>";
 				htmlCode += "</tr>\n";
+				ftp.disconnect();
 			}
 		} catch (Exception e) {
 			System.out.println("Exception !");
 		}
-		
 		return htmlCode + "</table>\n</html>";
 	}
 
@@ -129,6 +129,24 @@ public class FileService {
 	}
 
 	public File addFile(String filePath, String name) {
+		FTPClient ftp = new FTPClient();
+		FTPClientConfig config = new FTPClientConfig();
+		ftp.configure(config);
+		try {
+			ftp.connect("127.0.0.1",9874);
+			ftp.login("user","12345");
+			System.out.println("connected");
+			System.out.println(filePath);
+			System.out.println(name);
+	        InputStream in = new FileInputStream(filePath);
+	        System.out.println("in build");
+			ftp.storeFile(filePath, in);
+			System.out.println("file stored");
+			ftp.disconnect();
+		} catch (Exception e) {
+			System.out.println("Exception !");
+		}
+		
 		File file = new File(filePath, name);
 		if (files.putIfAbsent(filePath, file) != null) {
 			throw new FileAlreadyExistsException(filePath);

@@ -29,11 +29,15 @@ public class FileRestService {
 		fileService = new FileService();
 	}
 	
+	@Produces( { MediaType.APPLICATION_JSON  } )
 	@POST
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response addFile(@Context final UriInfo uriInfo ,@FormParam("name") String name, @FormParam("filePath") String filePath){
-		fileService.addFile(filePath, name);
-		System.out.println("name " + name + " filepath : " + filePath);
+	//@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response addFile(@Context final UriInfo uriInfo ,
+			@FormParam("name") final String name, 
+			@FormParam("path") final String path){
+		System.out.println("name " + name + " path : " + path);
+		fileService.addFile(path, name);
+		System.out.println("name " + name + "path : " + path);
 		return Response.created(uriInfo.getRequestUriBuilder().path(name).build()).build();
 	}
 	
