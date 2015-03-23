@@ -47,18 +47,18 @@ public class Starter {
 		DataOutputStream db;
 		String msg;
 		try {
-			client = new Socket("localhost", 1032);
+			client = new Socket("localhost", 9874);
 			in = client.getInputStream();
 			bf = new BufferedReader(new InputStreamReader(in));
 			msg = bf.readLine();
-			msg = DefConstant.USER + " toto\n";
+			msg = DefConstant.USER + " user\r\n";
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(msg);
 			in = client.getInputStream();
 			bf = new BufferedReader(new InputStreamReader(in));
 			msg = bf.readLine();
-			msg = DefConstant.PASS + " toto\n";
+			msg = DefConstant.PASS + " 12345\r\n";
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(msg);		

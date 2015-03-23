@@ -60,7 +60,7 @@ public class FileService {
 		htmlCode = "<html>";
 		try {	
 			/* Sending the request PORT config the data connection */
-			msg = DefConstant.PORT + " 127,0,0,1,32,32\n";
+			msg = DefConstant.PORT + " 127,0,0,1,32,32\r\n";
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(msg);
@@ -70,7 +70,7 @@ public class FileService {
 			System.out.println(bf.readLine());
 			
 			/* Send List Req */
-			msg = DefConstant.LIST+"\n";
+			msg = DefConstant.LIST+"\r\n";
 			out = client.getOutputStream();
 			db = new DataOutputStream(out);
 			db.writeBytes(msg);
