@@ -29,9 +29,9 @@ public class FileRestService {
 		fileService = new FileService();
 	}
 	
-	@Produces( { MediaType.APPLICATION_JSON  } )
+/*	@Produces( { MediaType.APPLICATION_JSON  } )
 	@POST
-	//@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response addFile(@Context final UriInfo uriInfo ,
 			@FormParam("name") final String name, 
 			@FormParam("path") final String path){
@@ -39,6 +39,14 @@ public class FileRestService {
 		fileService.addFile(path, name);
 		System.out.println("name " + name + "path : " + path);
 		return Response.created(uriInfo.getRequestUriBuilder().path(name).build()).build();
+	}*/
+	
+	@GET
+	public void addFile(@PathParam("name") final String name, 
+			@PathParam("path") final String path){
+		System.out.println("name " + name + " path : " + path);
+		fileService.addFile(path, name);
+		System.out.println("name " + name + "path : " + path);
 	}
 	
 	@Produces({"text/html"})
