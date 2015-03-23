@@ -57,7 +57,7 @@ public class FileService {
 	}
 
 	public String getFileList() {
-		String htmlCode = "<html>\n<table style\"=border: 1px solid black;\">\n";
+		String htmlCode = "<html>\n<table style=\"border: 1px solid black;\">\n";
 		FTPClient ftp = new FTPClient();
 		FTPClientConfig config = new FTPClientConfig();
 		ftp.configure(config);
@@ -69,7 +69,7 @@ public class FileService {
 			for (FTPFile f : files) {
 				htmlCode += "<tr>\n";
 				sc = new Scanner(f.toFormattedString());
-				sc.useDelimiter("\t");
+				sc.useDelimiter("\\s+");
 				while (sc.hasNext()) 
 					htmlCode += "<td>"+sc.next()+"</td>";
 				htmlCode += "</tr>\n";
