@@ -19,7 +19,7 @@ import javax.ws.rs.core.UriInfo;
 import com.example.services.FileService;
 
 @Path("/file")
-//@Consumes(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class FileRestService {
 	
 	@Inject	
@@ -31,14 +31,11 @@ public class FileRestService {
 	
 	@Produces( { MediaType.APPLICATION_JSON  } )
 	@POST
-	//@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response addFile(@Context final UriInfo uriInfo ,
-			@FormParam("name") final String name, 
-			@FormParam("path") final String path){
-		System.out.println("name " + name + " path : " + path);
-		fileService.addFile(path, name);
-		System.out.println("name " + name + "path : " + path);
-		return Response.created(uriInfo.getRequestUriBuilder().path(name).build()).build();
+	@Consumes({"multipart/form-data"})
+	public Response addFile(@Context final UriInfo uriInfo , @FormParam("content")String content, @FormParam("name")String name){
+		System.out.println(name);
+		fileService.addFile(content);
+		return Response.created(uriInfo.getRequestUriBuilder().path(uriInfo.getPath()).build()).build();
 	}
 	
 	@Produces({"text/html"})

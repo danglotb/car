@@ -1,6 +1,7 @@
 package com.example.services;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -16,6 +17,7 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
@@ -128,30 +130,37 @@ public class FileService {
 		return new java.io.File(filePath);
 	}
 
-	public File addFile(String filePath, String name) {
+	public File addFile(String content) {
 		FTPClient ftp = new FTPClient();
 		FTPClientConfig config = new FTPClientConfig();
 		ftp.configure(config);
 		try {
 			ftp.connect("127.0.0.1",9874);
 			ftp.login("user","12345");
-			System.out.println("connected");
-			System.out.println(filePath);
-			System.out.println(name);
-	        InputStream in = new FileInputStream(filePath);
+			System.out.println("connected " + content );
+			//path = path.replaceAll("%2F", "/");
+			//System.out.println("path : " + path + " " + "content : " + content);
+			InputStream in = new ByteArrayInputStream(content.getBytes());
+			/*BufferedReader bf = new BufferedReader(new InputStreamReader(in));
+			String str;
+			while((str = bf.readLine()) != null){
+				System.out.println(str);
+			}*/
 	        System.out.println("in build");
-			ftp.storeFile(filePath, in);
+			boolean ret = ftp.storeFile("mandel3.txt", in);
+			System.out.println("ret :" + ret);
 			System.out.println("file stored");
+			in.close();
 			ftp.disconnect();
 		} catch (Exception e) {
-			System.out.println("Exception !");
+			e.printStackTrace();
 		}
-		
-		File file = new File(filePath, name);
-		if (files.putIfAbsent(filePath, file) != null) {
-			throw new FileAlreadyExistsException(filePath);
-		}
-		return file;
+		/*
+		File file = new File(path, name);
+		if (files.putIfAbsent(path, file) != null) {
+			throw new FileAlreadyExistsException(path);
+		}*/
+		return null;
 	}
 
 	public void removeFile(String filePath) {
