@@ -3,9 +3,11 @@ package rest.tests;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -34,6 +36,10 @@ public class RESTTest {
 		st.run();
 	}
 	
+	/**
+	 * Test la fonction getFileList() en envoyant une requete GET à l'url :
+	 * http://127.0.0.1:8080/rest/api/file/
+	 */
 	@Test
 	public void getFileListTest() {
 		String urlStr = "http://127.0.0.1:8080/rest/api/file/";
@@ -44,12 +50,9 @@ public class RESTTest {
 			URLConnection uConnection = url.openConnection();
 			BufferedReader in = new BufferedReader(new InputStreamReader(uConnection.getInputStream()));
 			String inputLine;
-			
 			while ((inputLine = in.readLine()) != null)
 				ret +=inputLine;
-			
 			System.out.println(ret);
-			
 			in.close();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -58,6 +61,12 @@ public class RESTTest {
 		}
 	}
 	
-	
+	/**
+	 * Test la methode d'envoye d'un fichier avec une requete POST
+	 */
+	@Test
+	public void addFileTest() {
+		
+	}
 	
 }
