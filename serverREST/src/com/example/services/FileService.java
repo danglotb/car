@@ -130,24 +130,25 @@ public class FileService {
 		return new java.io.File(filePath);
 	}
 
-	public File addFile(String content) {
+	public File addFile(byte[] content, String name) {
 		FTPClient ftp = new FTPClient();
 		FTPClientConfig config = new FTPClientConfig();
 		ftp.configure(config);
 		try {
 			ftp.connect("127.0.0.1",9874);
 			ftp.login("user","12345");
-			System.out.println("connected " + content );
+			ftp.setFileType(FTP.BINARY_FILE_TYPE);
+			//System.out.println("connected " + content );
 			//path = path.replaceAll("%2F", "/");
 			//System.out.println("path : " + path + " " + "content : " + content);
-			InputStream in = new ByteArrayInputStream(content.getBytes());
+			InputStream in = new ByteArrayInputStream(content);
 			/*BufferedReader bf = new BufferedReader(new InputStreamReader(in));
 			String str;
 			while((str = bf.readLine()) != null){
 				System.out.println(str);
 			}*/
 	        System.out.println("in build");
-			boolean ret = ftp.storeFile("mandel3.txt", in);
+			boolean ret = ftp.storeFile(name, in);
 			System.out.println("ret :" + ret);
 			System.out.println("file stored");
 			in.close();

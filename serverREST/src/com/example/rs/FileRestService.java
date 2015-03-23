@@ -16,6 +16,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.cxf.jaxrs.ext.multipart.Multipart;
+
 import com.example.services.FileService;
 
 @Path("/file")
@@ -31,10 +33,9 @@ public class FileRestService {
 	
 	@Produces( { MediaType.APPLICATION_JSON  } )
 	@POST
-	@Consumes({"multipart/form-data"})
-	public Response addFile(@Context final UriInfo uriInfo , @FormParam("content")String content, @FormParam("name")String name){
-		System.out.println(name);
-		fileService.addFile(content);
+	@Consumes("multipart/form-data")
+	public Response addFile(@Context final UriInfo uriInfo , @Multipart("content") byte[] content, @FormParam("name")String name){
+		fileService.addFile(content, name);
 		return Response.created(uriInfo.getRequestUriBuilder().path(uriInfo.getPath()).build()).build();
 	}
 	
