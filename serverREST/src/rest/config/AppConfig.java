@@ -1,4 +1,4 @@
-package com.example.config;
+package rest.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,14 +14,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-import car.HelloWorldResource;
+import rest.rs.ConnectionServerService;
+import rest.rs.FileRestService;
+import rest.rs.JaxRsApiApplication;
+import rest.services.FileService;
 
-import com.example.rs.ConnectionServerService;
-import com.example.rs.FileRestService;
-import com.example.rs.JaxRsApiApplication;
-import com.example.rs.PeopleRestService;
-import com.example.services.FileService;
-import com.example.services.PeopleService;
 
 @Configuration
 public class AppConfig {	
@@ -35,8 +32,6 @@ public class AppConfig {
 		JAXRSServerFactoryBean factory = RuntimeDelegate.getInstance().createEndpoint( jaxRsApiApplication(), JAXRSServerFactoryBean.class );
 		
 		List<Object> serviceBeans = new ArrayList<Object>();
-		serviceBeans.add(peopleRestService());
-		serviceBeans.add(new HelloWorldResource());
 		serviceBeans.add(fileRestService());
 		serviceBeans.add(new ConnectionServerService());
 		
@@ -49,16 +44,6 @@ public class AppConfig {
 	@Bean 
 	public JaxRsApiApplication jaxRsApiApplication() {
 		return new JaxRsApiApplication();
-	}
-	
-	@Bean 
-	public PeopleRestService peopleRestService() {
-		return new PeopleRestService();
-	}
-	
-	@Bean 
-	public PeopleService peopleService() {
-		return new PeopleService();
 	}
 	
 	@Bean
