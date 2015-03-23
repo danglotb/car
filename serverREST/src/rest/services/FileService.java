@@ -9,8 +9,19 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 
+/**
+ * Class qui communique avec le serveur FTP, et qui effectue les 
+ * requetes
+ * 
+ * Les methodes de cet objet sont appelees par l'objet FileRestService apres qu'il ait
+ * effectue la correspondance entre la requete HTTP et la methode
+ * 
+ */
 public class FileService {
 
+	/**
+	 * @return la liste des fichiers du repertoire courant sous la forme d'un tableau HTML
+	 */
 	public String getFileList() {
 		String htmlCode = "<html>\n<table style=\"border: 1px solid black;\">\n";
 		FTPClient ftp = new FTPClient();
@@ -36,8 +47,11 @@ public class FileService {
 		return htmlCode + "</table>\n</html>";
 	}
 
-
-
+	/**
+	 * Ajoute un fichier au serveur
+	 * @param content : contenu du fichier a ajouter
+	 * @param name : nom du fichier a ajouter
+	 */
 	public void addFile(byte[] content, String name) {
 		FTPClient ftp = new FTPClient();
 		FTPClientConfig config = new FTPClientConfig();
@@ -55,6 +69,11 @@ public class FileService {
 		}
 	}
 
+	/**
+	 * Telecharge un fichier depuis le serveur
+	 * @param name : nom du fichier a telecharger
+	 * @return : le contenu du fichier sous forme d'un tableau d'octets (byte [])
+	 */
 	public byte[] getFile(String name){
 		byte[] buffer = null;
 		FTPClient ftp = new FTPClient();
@@ -75,6 +94,12 @@ public class FileService {
 		return buffer;
 	}
 	
+	/**
+	 * Supprime un fichier du serveur
+	 * @param filename : nom fichier a supprimer
+	 * @return - true si le serveur a reussis a le suppimer
+	 * 		   - faux sinon
+	 */
 	public boolean removeFile(String filename) {
 		boolean res = false;
 		FTPClient ftp = new FTPClient();

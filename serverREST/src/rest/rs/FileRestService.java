@@ -25,17 +25,34 @@ import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import rest.services.FileService;
 
 
+/**
+ * Classe qui fait correspondre les Requetes (de type POST, GET, DELETE, PUT) a des Methode
+ * de l'objet FileService
+ */
 @Path("/file")
 @Consumes(MediaType.APPLICATION_JSON)
 public class FileRestService {
 	
+	/**
+	 * Objet FileService qui traite les requetes
+	 */
 	@Inject	
 	private FileService fileService;
 
+	/**
+	 * Constructor
+	 */
 	public FileRestService(){
 		fileService = new FileService();
 	}
 	
+	/**
+	 * Methode qui ajoute un fichier au serveur FTP
+	 * @param uriInfo : URL : /api/rest/fil
+	 * @param content : contenue du fichier a envoyer
+	 * @param name : nom du fichier
+	 * @return 
+	 */
 	@Produces( { MediaType.APPLICATION_JSON  } )
 	@POST
 	@Consumes("multipart/form-data")
@@ -44,12 +61,21 @@ public class FileRestService {
 		return Response.created(uriInfo.getRequestUriBuilder().path(uriInfo.getPath()).build()).build();
 	}
 	
+	/**
+	 * Methode qui recupere le contenu du dossier courant
+	 * @return une Chaine HTML qui represente le tableau du contenu du repertoire
+	 */
 	@Produces({"text/html"})
 	@GET
 	public String getFileList() {
 		return fileService.getFileList();
 	}
 
+	/**
+	 * Methode qui recupere un fichier depuis le server
+	 * @param filePath : chemin jusqu'au fichier que l'on souhaite recuperer
+	 * @return
+	 */
 	@Produces({MediaType.APPLICATION_OCTET_STREAM})
 	@Path("/{filePath}")
 	@GET
@@ -70,11 +96,15 @@ public class FileRestService {
 	    return response.build();
 	}
 	
+	/***
+	 * Methode qui supprime un fichier du serveur
+	 * @param filename : chemin jusqu'au fichier que l'on souhaite supprimer
+	 * @return
+	 */
 	@Path("/{filename}")
 	@Consumes
 	@DELETE
 	public Response removeFile(@PathParam("filename") String filename){
-		
 		boolean isDeleted = fileService.removeFile(filename);
 		ResponseBuilder response = Response.ok((Object) isDeleted);
 	    response.header("Content-Disposition",
