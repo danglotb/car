@@ -24,7 +24,6 @@ import rest.html.GenerateHTML;
  */
 public class FileService {
 
-	private String cwd = null;
 	private final String FTP_ADR = "127.0.0.1";
 	private final int FTP_PORT = 9874;
 	private FTPClient ftp;
@@ -59,9 +58,6 @@ public class FileService {
 		return null;
 	}
 
-	public void setCwd(String cwd) {
-		this.cwd = cwd;
-	}
 
 	/**
 	 * @return la liste des fichiers du repertoire courant sous la forme d'un
@@ -102,18 +98,24 @@ public class FileService {
 							+ elements[8] + "</a></td>";
 				else
 					htmlCode += "<td><a onclick=\"reload()\" href=" + elements[8] + ">"
-							+ elements[8] + "</a></td>";
+							+ elements[8] + "</a></td><td><a href=\"\" class=\"del\" id=\"" + elements[8] +"\"> Delete </a></td>" ;
 				// htmlCode += "<td>"+elements[9]+"</td>";
 
 				htmlCode += "</tr>\n";
 			}
 		} catch (Exception e) {
-			System.out.println("Exception !");
+			e.printStackTrace();
 		}
 		return htmlCode + "</table>\n" + "</div>\n" + "</body>\n" + "" +
-				"<script>function reload(){" +
-				"	window.location.reload();" +
-				"}</script></html>\n";
+				"<script>$(function(){" +
+				"	$('.del').on('click', function(){" +
+				"		$.ajax({" +
+				"			url: $(this).attr('id')," +
+				"			type:'delete'" +
+				"			});" +
+				"	});" +
+				"});" +
+				"</script></html>\n";
 	}
 
 	/**
@@ -130,7 +132,6 @@ public class FileService {
 			InputStream in = new ByteArrayInputStream(content);
 			ftp.storeFile(name, in);
 			in.close();
-			ftp.disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -157,7 +158,6 @@ public class FileService {
 			if (!ftp.retrieveFile(name, out))
 				System.out.println("ERROR RETR");
 			out.close();
-			ftp.disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -174,8 +174,7 @@ public class FileService {
 	public boolean removeFile(String filename) {
 		boolean res = false;
 		try {
-			res = ftp.deleteFile(filename);
-			ftp.disconnect();
+			res = this.ftp.deleteFile(filename);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -185,8 +184,6 @@ public class FileService {
 	public void changeWorkingDirectory(String path) {
 		try {
 			ftp.changeWorkingDirectory(path);
-			ftp.disconnect();
-			this.cwd = path;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -206,15 +203,15 @@ public class FileService {
 	}
 
 	public String changeToParentDirectory(String pathname) {
+		String cwd = null;
 		try {
 			ftp.changeWorkingDirectory(pathname);
 			ftp.changeToParentDirectory();
-			this.cwd = ftp.printWorkingDirectory();
-			ftp.disconnect();
+			  cwd = ftp.printWorkingDirectory();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return this.cwd;
+		return cwd;
 	}
 
 }

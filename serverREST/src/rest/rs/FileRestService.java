@@ -1,9 +1,6 @@
 package rest.rs;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -20,8 +17,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
-
 
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 
@@ -51,20 +48,7 @@ public class FileRestService {
 	public FileRestService(){
 		fileService = new FileService();
 	}
-	
-	private void getCurrentSession(){
-		HttpSession session = request.getSession(true);
-		
-		String username = (String) session.getAttribute("username");
-		String password = (String) session.getAttribute("password");
-		String cwd = (String) session.getAttribute("cwd");
-		if(username == null || password == null || cwd == null){
-			//session.setAttribute("login", arg1);
-			//session.setAttribute("password", arg1);
-			//session.setAttribute("cdw", arg1);
-		}
-			
-	}
+
 	
 	@GET
 	@Path("/logout")
@@ -95,22 +79,23 @@ public class FileRestService {
 	 * @param name : nom du fichier
 	 * @return 
 	 */
-	@Produces( { MediaType.APPLICATION_JSON  } )
+	@Produces("text/html")
 	@POST
 	@Consumes("multipart/form-data")
-	public Response addFile(@Context final UriInfo uriInfo , @Multipart("content") byte[] content, @FormParam("name")String name){
+	public Status addFile(@Context final UriInfo uriInfo , @Multipart("content") byte[] content, @FormParam("name")String name){
 		System.out.println("IN ADD FILE");
 		HttpSession session = request.getSession(true);	
 		String username = (String) session.getAttribute("username");
 		String password = (String) session.getAttribute("password");
-		String cwd = (String) session.getAttribute("cwd");
-		if(username == null || password == null)
-			return Response.status(Response.Status.UNAUTHORIZED).build();
+		if(username == null || password == null){
+			return Response.Status.UNAUTHORIZED;
+		}
 		fileService.connectionFTP(username, password);
 		fileService.addFile(content, name);
 		System.out.println(name + " " + content);
 		fileService.disconnectFTP();
-		return Response.created(uriInfo.getRequestUriBuilder().path(uriInfo.getPath()).build()).build();
+		//return "<script>location.reload(true)</script>";
+		return null;
 	}
 	
 	/**
@@ -154,10 +139,11 @@ public class FileRestService {
 			filepath = cwd;
 		System.out.println("filePath : "+ filepath + "/"+ filename);
 		File file = fileService.getFile(filepath, filename);
-		fileService.disconnectFTP();
 		ResponseBuilder response = Response.ok((Object) file);
 	    response.header("Content-Disposition",
 	        "attachment; filename=" + file.getName());
+		fileService.disconnectFTP();
+
 	    return response.build();
 	}
 	
@@ -173,22 +159,23 @@ public class FileRestService {
 		HttpSession session = request.getSession(true);
 		String username = (String) session.getAttribute("username");
 		String password = (String) session.getAttribute("password");
-		String cwd = (String) session.getAttribute("cwd");
 		fileService.connectionFTP(username, password);
+		System.out.println("DELETE");
 		boolean isDeleted = fileService.removeFile(filename);
 		ResponseBuilder response = Response.ok((Object) isDeleted);
 	    response.header("Content-Disposition",
 	        "attachment; filename=" + filename);
+	    
+	    //fileService.disconnectFTP();
 	    return response.build();
 	}
 	
 	@Path("/cwd/{path}")
 	@GET
-	public Response changeWorkingDirectory(@PathParam("path") String path){
+	public String changeWorkingDirectory(@PathParam("path") String path){
 		HttpSession session = request.getSession(true);
 		String username = (String) session.getAttribute("username");
 		String password = (String) session.getAttribute("password");
-		String cwd = (String) session.getAttribute("cwd");
 		fileService.connectionFTP(username, password);
 		String currPath = "";
 		if(path.equals("parent")){
@@ -198,6 +185,7 @@ public class FileRestService {
 			this.fileService.changeWorkingDirectory(path);
 		}
 		session.setAttribute("cwd", currPath);
+		fileService.disconnectFTP();
 
 	    return null;
 	}

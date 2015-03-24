@@ -7,7 +7,8 @@ public class GenerateHTML {
 				+ "<html>\n"
 				+ "<head>\n"
 				+ "<title>Liste des fichiers du répertoire courant</title>\n"
-				+ "</head>\n"
+				+ "</head>\n" 
+				+ "	<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script>"
 				+ "<body>\n"
 				+ "<a href=\"logout/\">Logout</a>\n"
 				+ "<form method=\"post\" action=\".\" enctype=\"multipart/form-data\">\n"
@@ -16,9 +17,9 @@ public class GenerateHTML {
 				+ "<input type=\"submit\" value=\"Upload file\">\n"
 				+ "</form>\n" +
 				"<script>" +
-				"function(){" +
+				"$(function(){" +
 				"	$('input[type=submit]').on('click', function(){" +
-				"		location.reload();"+
+				"		location.reload(true);"+
 				"	});" +
 				"});" +
 				"</script>";
