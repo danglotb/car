@@ -1,8 +1,12 @@
 package rest.services;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -142,21 +146,22 @@ public class FileService {
 	 * @return : le contenu du fichier sous forme d'un tableau d'octets (byte
 	 *         [])
 	 */
-	public byte[] getFile(String pathname, String name) {
-		byte[] buffer = null;
+	public File getFile(String pathname, String name) {
+		File file = null;
 		try {
 			ftp.setFileType(FTP.BINARY_FILE_TYPE);
 			if (pathname != null)
 				ftp.changeWorkingDirectory(pathname);
-			InputStream in = ftp.retrieveFileStream(name);
-			buffer = new byte[in.available()];
-			in.read(buffer);
-			in.close();
+			file = new File("/home/b/"+name);
+			OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+			if (!ftp.retrieveFile(name, out))
+				System.out.println("ERROR RETR");
+			out.close();
 			ftp.disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return buffer;
+		return file;
 	}
 
 	/**

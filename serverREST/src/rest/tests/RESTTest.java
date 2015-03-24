@@ -1,47 +1,41 @@
 package rest.tests;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.security.cert.Certificate;
 
-import org.junit.BeforeClass;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLPeerUnverifiedException;
+
 import org.junit.Test;
+
+import sun.net.www.http.HttpClient;
 
 /**
  * Class general de Test pour la passerelle REST
  * 
- * \/ ! \\ verifiez que le serveur FTP est egalement lance (sur le port 9874
+ * 
+ * 
+ * \/ ! \\ verifiez que la passerelle et le serveur FTP sont lances lance (sur le port 9874
  * pour le moment...)
  * 
  */
 public class RESTTest {
 
 	/**
-	 * StarterTest pour lancer la passerelle REST dans un autre Thread
-	 */
-	private static StarterTest st;
-
-	/**
-	 * Initialise les differentes classes utiles aux tests. Lance notamment la
-	 * passerelle REST dans un autre Thread grace au StarterTest
-	 */
-	@BeforeClass
-	public static void setUp() {
-		st = new StarterTest();
-	//	st.run();
-	}
-
-	/**
 	 * Test la fonction getFileList() en envoyant une requete GET à l'url :
 	 * http://127.0.0.1:8080/rest/api/file/
 	 */
-	@Test
+	//@Test
 	public void getFileListTest() {
 		String urlStr = "http://127.0.0.1:8080/rest/api/file/";
 		URL url;
@@ -62,6 +56,38 @@ public class RESTTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	/**
+	 * Test la methode de connection
+	 */
+	public void connectionTest() {
+		try {
+			String url = "http://127.0.0.1:8080/rest/api/file";
+			
+			URL obj = new URL(url);
+			
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+	 
+			con.setRequestMethod("POST");
+	 
+			String urlParameters = "username=user&password=12345";
+			
+			con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			con.setRequestProperty("User-Agent", "Mozilla/5.0");
+			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			
+			con.setDoOutput(true);
+
+			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+			wr.writeBytes(urlParameters);
+			wr.flush();
+			wr.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Test la methode d'envoye d'un fichier avec une requete POST
@@ -78,7 +104,6 @@ public class RESTTest {
 
 			content="content=";
 			
-			/* c'est cool l'utf-8 */
 			while ((tmp = reader.readLine()) != null)
 				content+= URLEncoder.encode(tmp,"UTF-8");
 			
