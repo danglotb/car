@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-import rest.rs.ConnectionServerService;
 import rest.rs.FileRestService;
 import rest.rs.JaxRsApiApplication;
 import rest.services.FileService;
@@ -35,7 +34,6 @@ public class AppConfig {
 		
 		List<Object> serviceBeans = new ArrayList<Object>();
 		serviceBeans.add(fileRestService());
-		serviceBeans.add(new ConnectionServerService());
 		
 		factory.setServiceBeans(serviceBeans);
 		factory.setAddress( "/" + factory.getAddress() );

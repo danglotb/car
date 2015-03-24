@@ -14,6 +14,13 @@ public class GenerateHTML {
 				+ "<input type=\"text\" name=\"name\" placeholder=\"File name\"/>\n"
 				+ "<input type=\"file\" name=\"content\">\n"
 				+ "<input type=\"submit\" value=\"Upload file\">\n"
-				+ "</form>\n";
+				+ "</form>\n" +
+				"<script>" +
+				"function(){" +
+				"	$('input[type=submit]').on('click', function(){" +
+				"		location.reload();"+
+				"	});" +
+				"});" +
+				"</script>";
 	}
 }
