@@ -19,7 +19,9 @@ import rest.rs.FileRestService;
 import rest.rs.JaxRsApiApplication;
 import rest.services.FileService;
 
-
+/**
+ * Classe de configuration fournit dans l'archive TP2.
+ */
 @Configuration
 public class AppConfig {	
 	@Bean( destroyMethod = "shutdown" )

@@ -10,7 +10,14 @@ import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 
 import rest.html.GenerateHTML;
-
+/**
+ * Class qui communique avec le serveur FTP, et qui effectue les 
+ * requetes
+ * 
+ * Les methodes de cet objet sont appelees par l'objet FileRestService apres qu'il ait
+ * effectue la correspondance entre la requete HTTP et la methode
+ * 
+ */
 public class FileService {
 	
 	
@@ -21,6 +28,7 @@ public class FileService {
 	private String cwd;
 	
 	private FTPClient connectionFTP(String addr, int port, String username, String password){
+
 		FTPClient ftp = new FTPClient();
 		FTPClientConfig config = new FTPClientConfig();
 		ftp.configure(config);
@@ -77,7 +85,9 @@ public class FileService {
 	public void setCwd(String cwd) {
 		this.cwd = cwd;
 	}
-
+	/**
+	 * @return la liste des fichiers du repertoire courant sous la forme d'un tableau HTML
+	 */
 	public String getFileList(String cwd) {
 		String htmlCode = GenerateHTML.getHeader() + 
 				"<div id=\"table_liste_fichiers\">\n"+
@@ -127,8 +137,11 @@ public class FileService {
 				"</html>\n";
 	}
 
-
-
+	/**
+	 * Ajoute un fichier au serveur
+	 * @param content : contenu du fichier a ajouter
+	 * @param name : nom du fichier a ajouter
+	 */
 	public void addFile(byte[] content, String name) {
 		FTPClient ftp = this.connectionFTP("127.0.0.1", 9874, "user", "12345");
 		try {
@@ -142,7 +155,13 @@ public class FileService {
 		}
 	}
 
-	public byte[] getFile(String pathname, String name){
+	/**
+	 * Telecharge un fichier depuis le serveur
+	 * @param name : nom du fichier a telecharger
+	 * @param pathname : path complet du fichier
+	 * @return : le contenu du fichier sous forme d'un tableau d'octets (byte [])
+	 */
+public byte[] getFile(String pathname, String name){
 		byte[] buffer = null;
 		FTPClient ftp = this.connectionFTP("127.0.0.1", 9874, "user", "12345");
 		try {
@@ -160,6 +179,12 @@ public class FileService {
 		return buffer;
 	}
 	
+	/**
+	 * Supprime un fichier du serveur
+	 * @param filename : nom fichier a supprimer
+	 * @return - true si le serveur a reussis a le suppimer
+	 * 		   - faux sinon
+	 */
 	public boolean removeFile(String filename) {
 		boolean res = false;
 		FTPClient ftp = this.connectionFTP("127.0.0.1", 9874, "user", "12345");

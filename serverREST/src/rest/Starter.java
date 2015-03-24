@@ -11,6 +11,15 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import rest.config.AppConfig;
 
 
+/**
+ * Class Starter fournit dans l'archive TP2.
+ * 
+ * Elle contient un main qui
+ * 	- initialise un serveur sur le port 8080
+ * 	- ajoute le servletHolder
+ * 	- demarre le serveur	
+ * 
+ */
 public class Starter {
 	public static void main( final String[] args ) throws Exception {
 		Server server = new Server( 8080 );
