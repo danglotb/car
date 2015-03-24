@@ -78,13 +78,13 @@ public class FileRestService {
 	@POST
 	@Consumes("application/x-www-form-urlencoded")
 	public Response connection(@Context UriInfo uriInfo, @FormParam("username")String username, @FormParam("password") String password){
+		System.out.println("Connection");
 		HttpSession session = request.getSession(true);
 		session.setAttribute("username", username);
 		session.setAttribute("password", password);
 		fileService.connectionFTP(username, password);
 		session.setAttribute("cdw", fileService.getCwd());
 		fileService.disconnectFTP();
-		
 		return Response.ok().build();
 	}
 	
@@ -99,6 +99,7 @@ public class FileRestService {
 	@POST
 	@Consumes("multipart/form-data")
 	public Response addFile(@Context final UriInfo uriInfo , @Multipart("content") byte[] content, @FormParam("name")String name){
+		System.out.println("IN ADD FILE");
 		HttpSession session = request.getSession(true);	
 		String username = (String) session.getAttribute("username");
 		String password = (String) session.getAttribute("password");
