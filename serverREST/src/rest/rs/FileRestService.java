@@ -55,10 +55,10 @@ public class FileRestService {
 	private void getCurrentSession(){
 		HttpSession session = request.getSession(true);
 		
-		String login = (String) session.getAttribute("login");
+		String username = (String) session.getAttribute("username");
 		String password = (String) session.getAttribute("password");
 		String cwd = (String) session.getAttribute("cwd");
-		if(login == null || password == null || cwd == null){
+		if(username == null || password == null || cwd == null){
 			//session.setAttribute("login", arg1);
 			//session.setAttribute("password", arg1);
 			//session.setAttribute("cdw", arg1);
@@ -71,21 +71,21 @@ public class FileRestService {
 	public Response deconnection(@Context UriInfo uriInfo){
 		HttpSession session = request.getSession();
 		session.invalidate();
-		return Response.created(uriInfo.getRequestUriBuilder().path(uriInfo.getPath()).build()).build();
+		return Response.ok().build();
 
 	}
 	
 	@POST
 	@Consumes("application/x-www-form-urlencoded")
 	public Response connection(@Context UriInfo uriInfo, @FormParam("username")String username, @FormParam("password") String password){
-		fileService.setLogin(username);
-		fileService.setPassword(password);
 		HttpSession session = request.getSession(true);
-		session.setAttribute("login", username);
+		session.setAttribute("username", username);
 		session.setAttribute("password", password);
-		//session.setAttribute("cdw", fileService.getCwd());
+		fileService.connectionFTP(username, password);
+		session.setAttribute("cdw", fileService.getCwd());
+		fileService.disconnectFTP();
 		
-		return Response.created(uriInfo.getRequestUriBuilder().path(uriInfo.getPath()).build()).build();
+		return Response.ok().build();
 	}
 	
 	/**
@@ -99,8 +99,16 @@ public class FileRestService {
 	@POST
 	@Consumes("multipart/form-data")
 	public Response addFile(@Context final UriInfo uriInfo , @Multipart("content") byte[] content, @FormParam("name")String name){
+		HttpSession session = request.getSession(true);	
+		String username = (String) session.getAttribute("username");
+		String password = (String) session.getAttribute("password");
+		String cwd = (String) session.getAttribute("cwd");
+		if(username == null || password == null)
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+		fileService.connectionFTP(username, password);
 		fileService.addFile(content, name);
 		System.out.println(name + " " + content);
+		fileService.disconnectFTP();
 		return Response.created(uriInfo.getRequestUriBuilder().path(uriInfo.getPath()).build()).build();
 	}
 	
@@ -112,15 +120,17 @@ public class FileRestService {
 	@GET
 	public String getFileList() {
 		HttpSession session = request.getSession(true);
-		String login = (String) session.getAttribute("login");
+		String username = (String) session.getAttribute("username");
 		String password = (String) session.getAttribute("password");
 		String cwd = (String) session.getAttribute("cwd");
-		System.out.println("login : " + login + " password : " + password + " cwd :" + cwd);
-		if(login == null || password == null )
+		fileService.connectionFTP(username, password);
+		System.out.println("login : " + username + " password : " + password + " cwd :" + cwd);
+		if(username == null || password == null )
 			return fileService.getLoginPage();
 		if(cwd == null)
 			session.setAttribute("cwd", fileService.getCwd());
 		
+		fileService.disconnectFTP();
 		return fileService.getFileList((String)session.getAttribute("cwd"));
 	}
 

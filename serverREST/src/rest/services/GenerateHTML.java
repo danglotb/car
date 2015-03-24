@@ -10,5 +10,9 @@ public class GenerateHTML {
 				"<title>Passerelle Rest vers serveur FTP</title>\n" +
 				"</head>\n";
 	}
+	
+	public static String getUploadForm(){
+		return "<form method=\"post\" action=\".\" enctype=\"application/x-www-form-urlencoded";
+	}
 
 }
