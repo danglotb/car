@@ -6,27 +6,24 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.security.cert.Certificate;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLPeerUnverifiedException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.junit.Test;
-
-import sun.net.www.http.HttpClient;
 
 /**
  * Class general de Test pour la passerelle REST
  * 
  * 
  * 
- * \/ ! \\ verifiez que la passerelle et le serveur FTP sont lances lance (sur le port 9874
- * pour le moment...)
+ * \/ ! \\ verifiez que la passerelle et le serveur FTP sont lances lance (sur
+ * le port 9874 pour le moment...)
  * 
  */
 public class RESTTest {
@@ -35,7 +32,7 @@ public class RESTTest {
 	 * Test la fonction getFileList() en envoyant une requete GET à l'url :
 	 * http://127.0.0.1:8080/rest/api/file/
 	 */
-	//@Test
+	// @Test
 	public void getFileListTest() {
 		String urlStr = "http://127.0.0.1:8080/rest/api/file/";
 		URL url;
@@ -56,34 +53,47 @@ public class RESTTest {
 			e.printStackTrace();
 		}
 	}
-	
-	@Test
+
+
 	/**
 	 * Test la methode de connection
 	 */
+	@Test
 	public void connectionTest() {
 		try {
-			String url = "http://127.0.0.1:8080/rest/api/file";
-			
-			URL obj = new URL(url);
-			
-			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-	 
-			con.setRequestMethod("POST");
-	 
-			String urlParameters = "username=user&password=12345";
-			
-			con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-			con.setRequestProperty("User-Agent", "Mozilla/5.0");
-			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			
-			con.setDoOutput(true);
+			String urlStr = "http://127.0.0.1:8080/rest/api/file";
+			URL url = new URL(urlStr);
 
-			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-			wr.writeBytes(urlParameters);
-			wr.flush();
-			wr.close();
-			
+			Map<String, Object> params = new LinkedHashMap<String, Object>();
+			params.put("username", "user");
+			params.put("password", "12345");
+
+			StringBuilder postData = new StringBuilder();
+			for (Map.Entry<String, Object> param : params.entrySet()) {
+				if (postData.length() != 0)
+					postData.append('&');
+				postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+				postData.append('=');
+				postData.append(URLEncoder.encode(
+						String.valueOf(param.getValue()), "UTF-8"));
+			}
+
+			byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded");
+			conn.setRequestProperty("Content-Length",
+					String.valueOf(postDataBytes.length));
+			conn.setDoOutput(true);
+			conn.getOutputStream().write(postDataBytes);
+
+			Reader in = new BufferedReader(new InputStreamReader(
+					conn.getInputStream(), "UTF-8"));
+			for (int c; (c = in.read()) >= 0; System.out.print(">>" + (char) c))
+				;
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -94,33 +104,40 @@ public class RESTTest {
 	 */
 	@Test
 	public void addFileTest() {
-		String strURL = "http://127.0.0.1:8080/rest/api/file/";
-		String content, tmp;
-		OutputStreamWriter writer = null;
-		BufferedReader reader = null;
 		try {
-			
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream("testAddFile")));
+			String urlStr = "http://127.0.0.1:8080/rest/api/file";
+			URL url = new URL(urlStr);
 
-			content="content=";
-			
-			while ((tmp = reader.readLine()) != null)
-				content+= URLEncoder.encode(tmp,"UTF-8");
-			
-			content+="&amp;name="+URLEncoder.encode("testAddFile","UTF-8");
-			
-			URL url = new URL(strURL);
-			URLConnection uConnection = url.openConnection();
-			uConnection.setDoOutput(true);
-			
-			writer = new OutputStreamWriter(uConnection.getOutputStream());
-			writer.write(content);
-			writer.flush();
-			
-			writer.close();
-			
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			Map<String, Object> params = new LinkedHashMap<String, Object>();
+			params.put("content", "content_test".getBytes());
+			params.put("name","file_test_add");
+
+			StringBuilder postData = new StringBuilder();
+			for (Map.Entry<String, Object> param : params.entrySet()) {
+				if (postData.length() != 0)
+					postData.append('&');
+				postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+				postData.append('=');
+				postData.append(URLEncoder.encode(
+						String.valueOf(param.getValue()), "UTF-8"));
+			}
+
+			byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded");
+			conn.setRequestProperty("Content-Length",
+					String.valueOf(postDataBytes.length));
+			conn.setDoOutput(true);
+			conn.getOutputStream().write(postDataBytes);
+
+			Reader in = new BufferedReader(new InputStreamReader(
+					conn.getInputStream(), "UTF-8"));
+			for (int c; (c = in.read()) >= 0; System.out.print(">>" + (char) c))
+				;
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

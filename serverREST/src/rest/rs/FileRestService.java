@@ -1,6 +1,9 @@
 package rest.rs;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -48,8 +51,8 @@ public class FileRestService {
 	public FileRestService(){
 		fileService = new FileService();
 	}
-
 	
+
 	@GET
 	@Path("/logout")
 	public Response deconnection(@Context UriInfo uriInfo){
@@ -138,7 +141,17 @@ public class FileRestService {
 		if(cwd != null)
 			filepath = cwd;
 		System.out.println("filePath : "+ filepath + "/"+ filename);
-		File file = fileService.getFile(filepath, filename);
+
+		byte[] buffer = fileService.getFile(filepath, filename);
+		File file = new File(filename);
+		try {
+			OutputStream out = new FileOutputStream(file);
+			out.write(buffer);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		fileService.disconnectFTP();
 		ResponseBuilder response = Response.ok((Object) file);
 	    response.header("Content-Disposition",
 	        "attachment; filename=" + file.getName());
