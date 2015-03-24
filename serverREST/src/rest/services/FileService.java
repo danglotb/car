@@ -1,7 +1,6 @@
 package rest.services;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -9,6 +8,8 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
+
+import rest.html.GenerateHTML;
 
 /**
  * Class qui communique avec le serveur FTP, et qui effectue les requetes
