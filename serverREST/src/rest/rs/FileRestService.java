@@ -153,15 +153,7 @@ public class FileRestService {
 		if(cwd != null)
 			filepath = cwd;
 		System.out.println("filePath : "+ filepath + "/"+ filename);
-		byte[] buffer = fileService.getFile(filepath, filename);
-		File file = new File(filename);
-		try {
-			OutputStream out = new FileOutputStream(file);
-			out.write(buffer);
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		File file = fileService.getFile(filepath, filename);
 		fileService.disconnectFTP();
 		ResponseBuilder response = Response.ok((Object) file);
 	    response.header("Content-Disposition",
