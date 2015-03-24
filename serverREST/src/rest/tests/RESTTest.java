@@ -11,14 +11,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.security.cert.Certificate;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLPeerUnverifiedException;
 
 import org.junit.Test;
-
-import sun.net.www.http.HttpClient;
 
 /**
  * Class general de Test pour la passerelle REST
