@@ -2,6 +2,7 @@ package rest;
 
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.springframework.web.context.ContextLoaderListener;
@@ -15,8 +16,10 @@ public class Starter {
 		Server server = new Server( 8080 );
 		        
  		// Register and map the dispatcher servlet
- 		final ServletHolder servletHolder = new ServletHolder( new CXFServlet() );
- 		final ServletContextHandler context = new ServletContextHandler(); 		
+ 		final ServletHolder servletHolder = new ServletHolder( new CXFServlet());
+ 		final ServletContextHandler context = new ServletContextHandler();
+ 		//Allow server to use sessions !
+ 		context.setSessionHandler(new SessionHandler());
  		context.setContextPath( "/" );
  		context.addServlet( servletHolder, "/rest/*" ); 	
  		context.addEventListener( new ContextLoaderListener() );
