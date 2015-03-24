@@ -129,9 +129,9 @@ public class FileRestService {
 			return fileService.getLoginPage();
 		if(cwd == null)
 			session.setAttribute("cwd", fileService.getCwd());
-		
+		String fileList = fileService.getFileList((String)session.getAttribute("cwd"));
 		fileService.disconnectFTP();
-		return fileService.getFileList((String)session.getAttribute("cwd"));
+		return fileList;
 	}
 
 	/**
@@ -143,10 +143,14 @@ public class FileRestService {
 	@Path("/{filePath}")
 	@GET
 	public Response getFile(@PathParam("filePath") String filename) {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
+		String username = (String) session.getAttribute("username");
+		String password = (String) session.getAttribute("password");
+		String cwd = (String) session.getAttribute("cwd");
+		fileService.connectionFTP(username, password);
 		String filepath = null;
-		if(session.getAttribute("cwd") != null)
-			filepath = (String) session.getAttribute("cwd");
+		if(cwd != null)
+			filepath = cwd;
 		System.out.println("filePath : "+ filepath + "/"+ filename);
 		byte[] buffer = fileService.getFile(filepath, filename);
 		File file = new File(filename);
@@ -157,6 +161,7 @@ public class FileRestService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		fileService.disconnectFTP();
 		ResponseBuilder response = Response.ok((Object) file);
 	    response.header("Content-Disposition",
 	        "attachment; filename=" + file.getName());
@@ -172,6 +177,11 @@ public class FileRestService {
 	@Consumes
 	@DELETE
 	public Response removeFile(@PathParam("filename") String filename){
+		HttpSession session = request.getSession(true);
+		String username = (String) session.getAttribute("username");
+		String password = (String) session.getAttribute("password");
+		String cwd = (String) session.getAttribute("cwd");
+		fileService.connectionFTP(username, password);
 		boolean isDeleted = fileService.removeFile(filename);
 		ResponseBuilder response = Response.ok((Object) isDeleted);
 	    response.header("Content-Disposition",
@@ -183,6 +193,10 @@ public class FileRestService {
 	@GET
 	public Response changeWorkingDirectory(@PathParam("path") String path){
 		HttpSession session = request.getSession(true);
+		String username = (String) session.getAttribute("username");
+		String password = (String) session.getAttribute("password");
+		String cwd = (String) session.getAttribute("cwd");
+		fileService.connectionFTP(username, password);
 		String currPath = "";
 		if(path.equals("parent")){
 			currPath = this.fileService.changeToParentDirectory((String)session.getAttribute("cwd"));

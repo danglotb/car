@@ -1,6 +1,7 @@
 package rest.services;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -92,10 +93,10 @@ public class FileService {
 				htmlCode += "<td>" + elements[6] + "</td>";
 				// htmlCode += "<td>"+elements[7]+"</td>";
 				if (elements[0].startsWith("d"))
-					htmlCode += "<td><a href=cwd/" + elements[8] + ">"
+					htmlCode += "<td><a onclick=\"reload()\" href=cwd/" + elements[8] + ">"
 							+ elements[8] + "</a></td>";
 				else
-					htmlCode += "<td><a href=" + elements[8] + ">"
+					htmlCode += "<td><a onclick=\"reload()\" href=" + elements[8] + ">"
 							+ elements[8] + "</a></td>";
 				// htmlCode += "<td>"+elements[9]+"</td>";
 
@@ -104,7 +105,10 @@ public class FileService {
 		} catch (Exception e) {
 			System.out.println("Exception !");
 		}
-		return htmlCode + "</table>\n" + "</div>\n" + "</body>\n" + "</html>\n";
+		return htmlCode + "</table>\n" + "</div>\n" + "</body>\n" + "" +
+				"<script>function reload(){" +
+				"	window.location.reload();" +
+				"}</script></html>\n";
 	}
 
 	/**
