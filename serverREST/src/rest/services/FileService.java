@@ -26,7 +26,6 @@ public class FileService {
 	private FTPClient ftp;
 
 	public void connectionFTP(String username, String password) {
-
 		this.ftp = new FTPClient();
 		FTPClientConfig config = new FTPClientConfig();
 		this.ftp.configure(config);

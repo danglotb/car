@@ -53,7 +53,6 @@ public class FileRestService {
 	
 	private void getCurrentSession(){
 		HttpSession session = request.getSession(true);
-		
 		String username = (String) session.getAttribute("username");
 		String password = (String) session.getAttribute("password");
 		String cwd = (String) session.getAttribute("cwd");
@@ -62,7 +61,6 @@ public class FileRestService {
 			//session.setAttribute("password", arg1);
 			//session.setAttribute("cdw", arg1);
 		}
-			
 	}
 	
 	@GET
