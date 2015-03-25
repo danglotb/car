@@ -1,5 +1,6 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
 
 public class SiteImpl extends UnicastRemoteObject implements SiteItf {
@@ -9,11 +10,12 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
 	 */
 	private static final long serialVersionUID = 1L;
 	private SiteItf pere;
-	private SiteItf [] fils;
+	private List<SiteItf> fils;
 	
 	
-	protected SiteImpl() throws RemoteException {
+	protected SiteImpl(SiteItf pere) throws RemoteException {
 		super();
+		this.pere = pere;
 	}
 
 	public void spread() {
@@ -28,12 +30,15 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
 		this.pere = pere;
 	}
 
-	public SiteItf [] getFils() {
+	public List<SiteItf> getFils() {
 		return fils;
 	}
 
-	public void setFils(SiteItf [] fils) {
+	public void setFils(List<SiteItf> fils) {
 		this.fils = fils;
 	}
-
+	
+	public void addFils(SiteItf fils){
+		this.fils.add(fils);
+	}
 }
