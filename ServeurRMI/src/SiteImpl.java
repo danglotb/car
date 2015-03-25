@@ -10,49 +10,43 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private SiteItf pere;
-	private List<SiteItf> fils;
+	private List<SiteItf> nodes;
 	private static int num = 1;
 	private int monNum;
+	public boolean propage;
 	
-	protected SiteImpl(SiteItf pere) throws RemoteException {
-		this.pere = pere;
+	protected SiteImpl() throws RemoteException {
 		this.monNum = SiteImpl.num++;
-		this.fils = new ArrayList<SiteItf>();
+		this.nodes = new ArrayList<SiteItf>();
+		this.propage = false;
 	}
 
 	public void spread(final byte [] data) throws RemoteException {
 		// Propage les donnees a tous ses fils
+		if (propage) return;
 		System.out.println(" Noeud n° " +  this.monNum + " : données reçues, je propage à mes fils");
-		for (final SiteItf fils : this.fils) {
+		for (final SiteItf node : this.nodes) {
 				new Thread () {
 					public void run() {
 						try {
-							fils.spread(data);
+							node.spread(data);
 						} catch (RemoteException e) {e.printStackTrace();}
 					}
 				}.start();
 		}
 		System.out.println(this.monNum + "données propagées");
-	}
-
-	public SiteItf getPere() throws RemoteException {
-		return pere;
-	}
-
-	public void setPere(SiteItf pere) throws RemoteException {
-		this.pere = pere;
+		propage = true;
 	}
 
 	public List<SiteItf> getFils() throws RemoteException {
-		return fils;
+		return nodes;
 	}
 
-	public void setFils(List<SiteItf> fils) throws RemoteException{
-		this.fils = fils;
+	public void setNodes(List<SiteItf> nodes) throws RemoteException{
+		this.nodes = nodes;
 	}
 	
-	public void addFils(SiteItf fils) throws RemoteException{
-		this.fils.add(fils);
+	public void addNode(SiteItf node) throws RemoteException{
+		this.nodes.add(node);
 	}
 }
