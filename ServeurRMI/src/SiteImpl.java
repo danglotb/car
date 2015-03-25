@@ -18,8 +18,12 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
 		this.pere = pere;
 	}
 
-	public void spread() {
-		
+	public void spread(byte [] data) {
+		// Propage les donnees a tous ses fils
+		System.out.println("données reçues, je propage à mes fils");
+		for (SiteItf fils : this.fils)
+			fils.spread(data);
+		System.out.println("données propagées");
 	}
 
 	public SiteItf getPere() {
