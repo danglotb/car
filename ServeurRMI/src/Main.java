@@ -17,6 +17,8 @@ public class Main {
 		noeuds[1].addFils(noeuds[3]);
 		noeuds[0].addFils(noeuds[4]);
 		noeuds[4].addFils(noeuds[5]);
+		
+		noeuds[0].spread("toto".getBytes());
 
 	}
 	
