@@ -70,6 +70,6 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
 	}
 	
 	public String getNum() throws RemoteException{
-		return this.num +"";
+		return this.monNum +"";
 	}
 }

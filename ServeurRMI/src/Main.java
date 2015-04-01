@@ -23,7 +23,7 @@ public class Main {
 		noeuds[4].addFils(noeuds[5]);
 		
 		for (int i = 0 ; i < noeuds.length ; i++)
-				Naming.bind(i+"", noeuds[i]);
+				Naming.bind(i+1+"", noeuds[i]);
 			
 	}
 	
