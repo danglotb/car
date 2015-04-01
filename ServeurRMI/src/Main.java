@@ -1,9 +1,13 @@
-import java.rmi.RemoteException;
+
+import java.rmi.Naming;
 
 
+/**
+ * Launch Server
+ */
 public class Main {
 
-	public static void main(String[] args) throws RemoteException {
+	public static void main(String[] args) throws Exception {
 		
 		SiteItf[] noeuds = new SiteImpl[6];
 		noeuds[0] = new SiteImpl(null);
@@ -18,8 +22,9 @@ public class Main {
 		noeuds[0].addFils(noeuds[4]);
 		noeuds[4].addFils(noeuds[5]);
 		
-		noeuds[0].spread("toto".getBytes());
-
+		for (int i = 0 ; i < noeuds.length ; i++)
+				Naming.bind(i+"", noeuds[i]);
+			
 	}
 	
 }
