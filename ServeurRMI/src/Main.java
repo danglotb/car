@@ -1,3 +1,4 @@
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 
 import site.SiteImpl;
@@ -21,6 +22,7 @@ public class Main {
 		noeuds[0].addNode(noeuds[4]);
 		noeuds[4].addNode(noeuds[5]);
 		noeuds[4].addNode(noeuds[5]);
+		
 		
 		noeuds[0].spread("toto".getBytes());
 	}

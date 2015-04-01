@@ -9,8 +9,6 @@ public class Annuaire {
 
 	private SiteItf[] noeuds;
 	
-	
-	
 	public Annuaire() {
 		noeuds 	= new SiteImpl[6];
 	}
