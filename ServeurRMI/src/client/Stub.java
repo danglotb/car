@@ -1,10 +1,10 @@
 package client;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.rmi.server.RemoteStub;
 
 public class Stub {	
 	
@@ -20,22 +20,17 @@ public class Stub {
 		}
 	}
 	
-	
-	
-	public String spread(byte [] data) {
+	public void spread(int index, byte [] data) {
+		byte [] sendData = new byte[data.length+1];
+		sendData = data;
+		sendData[data.length] = (byte)index;
 		try {
-			PrintWriter outToServer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-			
-			
-			
-			
+			DataOutputStream out = new DataOutputStream(this.socket.getOutputStream());
+			out.write(sendData);
+			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
-		return "";
 	}
 	
 	

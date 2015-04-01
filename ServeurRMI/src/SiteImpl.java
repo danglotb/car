@@ -49,4 +49,5 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
 	public void addNode(SiteItf node) throws RemoteException{
 		this.nodes.add(node);
 	}
+	
 }
