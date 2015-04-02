@@ -29,22 +29,27 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
 		// Propage les donnees a tous ses fils
 		System.out.println(" Noeud n° " +  this.monNum + " : données reçues, je propage à mes fils");
 		for (final SiteItf fils : this.fils) {
-			/*	new Thread () {
+			new Thread () {
 					public void run() {
 						try {
-							fils.spread(data);
-							
-						} catch (RemoteException e) {e.printStackTrace();}
+							((SiteItf)(Naming.lookup(fils.getNum()))).spread(data);
+						} catch (RemoteException e) {
+							e.printStackTrace();
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						} catch (NotBoundException e) {
+							e.printStackTrace();
+						}
 					}
-				}.start();*/
+				}.start();
 			
-				try {
+				/*try {
 					((SiteItf)(Naming.lookup(fils.getNum()))).spread(data);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				} catch (NotBoundException e) {
 					e.printStackTrace();
-				}
+				}*/
 		}
 		System.out.println(this.monNum + "données propagées");
 	}
