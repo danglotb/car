@@ -18,6 +18,12 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
 	private List<SiteItf> fils;
 	private static int num = 1;
 	private int monNum;
+	private String name;
+	
+	public SiteImpl(String name) throws RemoteException {
+		this.name = name;
+		this.fils = new ArrayList<SiteItf>();
+	}
 	
 	public SiteImpl(SiteItf pere) throws RemoteException {
 		this.pere = pere;
@@ -76,5 +82,14 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
 	
 	public String getNum() throws RemoteException{
 		return this.monNum +"";
+	}
+	
+	public void addFather(String father) throws RemoteException, MalformedURLException, NotBoundException {
+		this.pere = ((SiteItf)(Naming.lookup(father)));
+	}
+	
+	public void addSon(String son) throws MalformedURLException, RemoteException, NotBoundException {
+		this.fils.add(((SiteItf)(Naming.lookup(son))));
+		((SiteItf)(Naming.lookup(son))).addFather(this.name);
 	}
 }

@@ -65,4 +65,12 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	public String getName() throws RemoteException {
 		return this.name;
 	}
+
+	/**
+	 * 
+	 * @throw new UnsupportedOperationException 
+	 */
+	public void addFather(String father) throws RemoteException {
+		throw new UnsupportedOperationException();
+	}
 }

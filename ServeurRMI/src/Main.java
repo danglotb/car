@@ -10,7 +10,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		
 		SiteItf[] noeuds = new SiteImpl[6];
-		noeuds[0] = new SiteImpl(null);
+		noeuds[0] = new SiteImpl("");
 		noeuds[1] = new SiteImpl(noeuds[0]);
 		noeuds[2] = new SiteImpl(noeuds[1]);
 		noeuds[3] = new SiteImpl(noeuds[1]);

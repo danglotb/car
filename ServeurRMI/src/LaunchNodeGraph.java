@@ -14,8 +14,7 @@ public class LaunchNodeGraph {
 		
 		SiteImplGraph node = new SiteImplGraph(args[0]);
 		
-		//Incrition du node aupres de rmiRegistry 
-		
+		//Incription du node aupres de rmiRegistry 
 		Naming.bind(args[0], node);
 		
 		for (int i = 1 ; i < args.length ; i++) {
