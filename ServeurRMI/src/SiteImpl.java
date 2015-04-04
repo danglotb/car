@@ -79,7 +79,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
 	public void addFils(SiteItf fils) throws RemoteException{
 		this.fils.add(fils);
 	}
-	
+		
 	public String getNum() throws RemoteException{
 		return this.monNum +"";
 	}
@@ -91,5 +91,13 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
 	public void addSon(String son) throws MalformedURLException, RemoteException, NotBoundException {
 		this.fils.add(((SiteItf)(Naming.lookup(son))));
 		((SiteItf)(Naming.lookup(son))).addFather(this.name);
+	}
+
+	/**
+	 * @unused
+	 */
+	public void addVoisin(String name) throws MalformedURLException,
+			RemoteException, NotBoundException {
+		throw new UnsupportedOperationException();
 	}
 }

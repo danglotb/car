@@ -27,9 +27,6 @@ public class LaunchNodeTree {
 			node.addSon(args[i]);
 		}
 		
-		
-		
-		
 	}
 
 }

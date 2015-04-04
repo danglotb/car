@@ -11,5 +11,5 @@ public interface SiteItf extends Remote {
 	public void spread(byte [] data) throws RemoteException;
 	public String getNum() throws RemoteException;
 	public void addFather(String father) throws RemoteException, MalformedURLException, NotBoundException;
-		
+	public void addVoisin(String name) throws MalformedURLException, RemoteException, NotBoundException;
 }
