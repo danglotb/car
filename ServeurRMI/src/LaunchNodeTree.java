@@ -19,10 +19,9 @@ public class LaunchNodeTree {
 	 */
 	public static void main(String[] args) throws RemoteException, MalformedURLException, AlreadyBoundException, NotBoundException {
 		
-		SiteImpl node = new SiteImpl(args[0]);
-		
-		Naming.bind(args[0], node);
-		
+		SiteImplTree node = new SiteImplTree(args[0]);
+		System.out.println("arg : "+ args[0] + " " + " node : " + node.getNum());
+		Naming.rebind(args[0], node);
 		for (int i = 1 ; i < args.length ; i++) {
 			node.addSon(args[i]);
 		}

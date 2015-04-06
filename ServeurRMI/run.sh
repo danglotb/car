@@ -10,7 +10,7 @@ echo 'compiling...'
 #setting env
 bin_directory=bin
 src_directory=src
-tree_node=SiteImpl
+tree_node=SiteImplTree
 tree_graph=SiteImplGraph
 #compile
 javac $src_directory/*.java -d $bin_directory
@@ -18,7 +18,7 @@ sleep 1
 cd $bin_directory
 rmic $tree_node
 sleep 1
-rmic $tree_graph
+# rmic $tree_graph
 rmiregistry &
 
 #launch nodes
@@ -30,4 +30,7 @@ do
     echo $index $p
     java LaunchNodeTree $index $p &
     index=$(($index+1))
+    # if [ $index -gt 1 ] ; then
+    # 	exit 0
+    # fi
 done < $file

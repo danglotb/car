@@ -3,7 +3,7 @@
 bin_directory=bin
 src_directory=src
 
-site=SiteImpl
+site=SiteImplTree
 
 javac $src_directory/*.java 
 sleep 1
