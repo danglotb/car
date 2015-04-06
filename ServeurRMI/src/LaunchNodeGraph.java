@@ -1,14 +1,14 @@
 import java.rmi.Naming;
 
-
+/**
+ * Contient un main pour créer, ajouter des voisins et inscrire un noeud de type Graph
+ */
 public class LaunchNodeGraph {
-	
 	
 	/**
 	 * Lance un noeud Type Graphe
 	 * @param args [0] : Name of the node
 	 * 	args[1+] : Name of the connected nodes
-	 * @throws Exception
 	 */
 	public static void main(String[] args)  throws Exception {
 		
@@ -18,7 +18,9 @@ public class LaunchNodeGraph {
 		Naming.bind(args[0], node);
 		
 		for (int i = 1 ; i < args.length ; i++) {
-			node.addVoisin(args[i]);
+			// on verifie qu'il s'agit bien d'un voisin, et non pas du -1
+			if (!args[i].equals("-1"))
+				node.addVoisin(args[i]);
 		}
 		
 	}

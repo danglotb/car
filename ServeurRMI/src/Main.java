@@ -2,6 +2,9 @@
 import java.rmi.Naming;
 
 
+//TODO rm this main
+
+
 /**
  * Launch Server
  */
