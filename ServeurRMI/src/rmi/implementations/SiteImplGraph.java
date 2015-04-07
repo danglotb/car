@@ -63,7 +63,7 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 		this.idToTimeStamp.put(id, System.currentTimeMillis());
 		// spread to all sons
 		System.out.println(" Noeud n° " +  this.name + " : données reçues...");
-		System.out.println(new String(data) + "... je propage à mes fils");
+		System.out.println(new String(data) + "... je propage à mes successeurs");
 		for (final String voisin : this.successor) {
 			//Concurrency
 			new Thread () {

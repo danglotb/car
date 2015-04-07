@@ -61,10 +61,9 @@ public class SiteImplTree extends UnicastRemoteObject implements SiteItf {
 	 */
 	public void spread(final byte [] data, int id) throws RemoteException {
 		// Propage les donnees a tous ses fils
-		System.out.println(" Noeud n° " +  this.name + " : données reçues, je propage à mes fils");
+		System.out.println(" Noeud n° " +  this.name + " : données reçues...");
+		System.out.println(new String(data) + "... je propage à mes fils");
 		this.data = data;			
-		System.out.println("yo :" + new String(this.getData()));
-
 		for (final String son : this.sons) {
 			new Thread () {
 					public void run() {
