@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Objet RMI qui implement l'interface SiteItf
- * Cette class represente un noeud de Graphe.
+ * RMI object wich is implements SiteItf
+ * This is a node of Graph
  */
 public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	
@@ -19,12 +19,12 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	private static final long serialVersionUID = 23L;
 	
 	/**
-	 * List des noeuds voisins
+	 * List of successor
 	 */
-	private List<String> voisins;
+	private List<String> successor;
 	
 	/**
-	 * Nom du noeud
+	 * Name of the Node
 	 */
 	private String name;
 	
@@ -32,18 +32,18 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	
 	/**
 	 * Constructor
-	 * @param name : le nom du noeud sous forme de String
+	 * @param name : name of the node
 	 * @throws RemoteException
 	 */
 	public SiteImplGraph(String name) throws RemoteException {
 		this.name = name;
-		this.voisins = new ArrayList<String>();
+		this.successor = new ArrayList<String>();
 		this.spread = false;
 	}
 
 	/**
-	 * Methode principale qui propage un tableau d'octet a tous les voisins
-	 * @param data : tableau d'octet propagés
+	 * Method wich spread an array of byte
+	 * @param data : array of byte
 	 */
 	public void spread(final byte [] data) throws RemoteException {
 		if (spread) {
@@ -52,7 +52,7 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 		}
 		// Propage les donnees a tous ses fils
 		System.out.println(" Noeud n° " +  this.name + " : données reçues, je propage à mes fils");
-		for (final String voisin : this.voisins) {
+		for (final String voisin : this.successor) {
 			//Concurrence
 			new Thread () {
 					public void run() {
@@ -73,12 +73,12 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	}
 	
 	/**
-	 * Ajout un voisin à la liste des voisins
-	 * @param name : nom du nom voisin a ajouté sous forme de String
+	 * Add a successor
+	 * @param name : name of the successor as a String (Logic addresse)
 	 */
 	public void addConnection(String name) throws MalformedURLException, RemoteException, NotBoundException {
-		if (!this.voisins.contains(name)) 
-			this.voisins.add(name);
+		if (!this.successor.contains(name)) 
+			this.successor.add(name);
 	}
 	
 }
