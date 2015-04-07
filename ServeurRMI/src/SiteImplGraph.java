@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * RMI object wich is implements SiteItf
+ * RMI object which is implements SiteItf
  * This is a node of Graph
  */
 public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
@@ -24,40 +24,43 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	private List<String> successor;
 	
 	/**
-	 * Name of the Node
+	 * Name of the Node, need to be unique, in order to be bind into rmiregistry.
 	 */
 	private String name;
 	
-	private boolean spread;
+	/**
+	 * List of the id to know if we spread ornot.
+	 */
+	private List<Integer> listId;
+	
 	
 	/**
 	 * Constructor
-	 * @param name : name of the node
+	 * @param name : Name of Node
 	 * @throws RemoteException
 	 */
 	public SiteImplGraph(String name) throws RemoteException {
 		this.name = name;
 		this.successor = new ArrayList<String>();
-		this.spread = false;
+		this.listId = new ArrayList<Integer>();
 	}
 
 	/**
-	 * Method wich spread an array of byte
-	 * @param data : array of byte
+	 * this method is used to spread the data.
+	 * @args : id is used to know if the node already spread it or not
 	 */
-	public void spread(final byte [] data) throws RemoteException {
-		if (spread) {
-			spread = false;
+	public void spread(final byte [] data,final int id) throws RemoteException {
+		if (this.listId.contains(id))
 			return;
-		}
-		// Propage les donnees a tous ses fils
+		this.listId.add(id);
+		// spread to all sons
 		System.out.println(" Noeud n° " +  this.name + " : données reçues, je propage à mes fils");
 		for (final String voisin : this.successor) {
-			//Concurrence
+			//Concurrency
 			new Thread () {
 					public void run() {
 						try {
-							((SiteItf)(Naming.lookup(voisin))).spread(data);
+							((SiteItf)(Naming.lookup(voisin))).spread(data,id);
 						} catch (RemoteException e) {
 							e.printStackTrace();
 						} catch (MalformedURLException e) {
@@ -69,12 +72,10 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 				}.start();
 		}
 		System.out.println(this.name + "données propagées");
-		this.spread = true;
 	}
 	
 	/**
-	 * Add a successor
-	 * @param name : name of the successor as a String (Logic addresse)
+	 * Add a successor at the list if it doesn't contain it
 	 */
 	public void addConnection(String name) throws MalformedURLException, RemoteException, NotBoundException {
 		if (!this.successor.contains(name)) 

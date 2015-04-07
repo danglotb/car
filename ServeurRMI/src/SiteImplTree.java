@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Objet RMI qui implement l'interface SiteItf
- * Cette class represente un noeud d'arbre
+ * RMI Object which implements SiteItf
+ * TreeNode
  */
 public class SiteImplTree extends UnicastRemoteObject implements SiteItf {
 	
@@ -19,24 +19,24 @@ public class SiteImplTree extends UnicastRemoteObject implements SiteItf {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Père du noeud
+	 * Name of father 
 	 */
 	private String father;
 	
 	/**
-	 * List de fils
+	 * List of sons
 	 */
 	private List<String> sons;
 	
 	/**
-	 * Nom du noeud
+	 * Name of the Node, need to be unique, in order to be bind into rmiregistry
 	 */
 	private String name;
 	
 	/**
 	 * Constructor
-	 * @param name : nom du noeud
-	 * @param father : nom du pere
+	 * @param name : Name of Node
+	 * @param father : Name of father
 	 * @throws RemoteException
 	 */
 	public SiteImplTree(String name, String father) throws RemoteException {
@@ -45,14 +45,18 @@ public class SiteImplTree extends UnicastRemoteObject implements SiteItf {
 		this.sons = new ArrayList<String>();
 	}
 	
-	public void spread(final byte [] data) throws RemoteException {
+	/**
+	 * this method is used to spread the data.
+	 * @args : id is not used in the case of a Tree
+	 */
+	public void spread(final byte [] data, int id) throws RemoteException {
 		// Propage les donnees a tous ses fils
 		System.out.println(" Noeud n° " +  this.name + " : données reçues, je propage à mes fils");
 		for (final String son : this.sons) {
 			new Thread () {
 					public void run() {
 						try {
-							((SiteItf)(Naming.lookup(son))).spread(data);
+							((SiteItf)(Naming.lookup(son))).spread(data, 0);
 						} catch (RemoteException e) {
 							e.printStackTrace();
 						} catch (MalformedURLException e) {
@@ -66,9 +70,9 @@ public class SiteImplTree extends UnicastRemoteObject implements SiteItf {
 		}
 		System.out.println(this.name + "données propagées");
 	}
-
+	
 	/**
-	 * ajoute un fils a l'arbre
+	 * Add a son at the list if it doesn't contain it
 	 */
 	public void addConnection(String son) throws MalformedURLException,
 			RemoteException, NotBoundException {
