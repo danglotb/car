@@ -28,6 +28,6 @@ index=1
 while read p
 do
     echo $index $p
-    #java LaunchNodeTree $index $p &
+    #xterm -e java LaunchNodeTree $index $p &
     index=$(($index+1))
 done < $file

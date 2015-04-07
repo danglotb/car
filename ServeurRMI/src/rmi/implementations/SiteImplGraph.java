@@ -11,8 +11,8 @@ import java.util.List;
 import rmi.interfaces.SiteItf;
 
 /**
- * Objet RMI qui implement l'interface SiteItf
- * Cette class represente un noeud de Graphe.
+ * RMI object which is implements SiteItf
+ * This is a node of Graph
  */
 public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	
@@ -22,40 +22,48 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	private static final long serialVersionUID = 23L;
 	
 	/**
-	 * List des noeuds voisins
+	 * List of successor
 	 */
-	private List<String> voisins;
+	private List<String> successor;
 	
 	/**
-	 * Nom du noeud
+	 * Name of the Node, need to be unique, in order to be bind into rmiregistry.
 	 */
 	private String name;
 	
-	private boolean spread;
+	/**
+	 * List of the id to know if we spread ornot.
+	 */
+	private List<Integer> listId;
+	
 	
 	/**
 	 * Constructor
-	 * @param name : le nom du noeud sous forme de String
+	 * @param name : Name of Node
 	 * @throws RemoteException
 	 */
 	public SiteImplGraph(String name) throws RemoteException {
 		this.name = name;
-		this.voisins = new ArrayList<String>();
+		this.successor = new ArrayList<String>();
+		this.listId = new ArrayList<Integer>();
 	}
 
 	/**
-	 * Methode principale qui propage un tableau d'octet a tous les voisins
-	 * @param data : tableau d'octet propagés
+	 * this method is used to spread the data.
+	 * @args : id is used to know if the node already spread it or not
 	 */
-	public void spread(final byte [] data) throws RemoteException {
-		// Propage les donnees a tous ses fils
+	public void spread(final byte [] data,final int id) throws RemoteException {
+		if (this.listId.contains(id))
+			return;
+		this.listId.add(id);
+		// spread to all sons
 		System.out.println(" Noeud n° " +  this.name + " : données reçues, je propage à mes fils");
-		for (final String voisin : this.voisins) {
-			//Concurrence
+		for (final String voisin : this.successor) {
+			//Concurrency
 			new Thread () {
 					public void run() {
 						try {
-							((SiteItf)(Naming.lookup(voisin))).spread(data);
+							((SiteItf)(Naming.lookup(voisin))).spread(data,id);
 						} catch (RemoteException e) {
 							e.printStackTrace();
 						} catch (MalformedURLException e) {
@@ -70,12 +78,11 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	}
 	
 	/**
-	 * Ajout un voisin à la liste des voisins
-	 * @param name : nom du nom voisin a ajouté sous forme de String
+	 * Add a successor at the list if it doesn't contain it
 	 */
 	public void addConnection(String name) throws MalformedURLException, RemoteException, NotBoundException {
-		if (!this.voisins.contains(name)) 
-			this.voisins.add(name);
+		if (!this.successor.contains(name)) 
+			this.successor.add(name);
 	}
 	
 }
