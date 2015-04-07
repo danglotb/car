@@ -7,17 +7,38 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Objet RMI qui implement l'interface SiteItf
+ * Cette class represente un noeud d'arbre
+ */
 public class SiteImplTree extends UnicastRemoteObject implements SiteItf {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Père du noeud
+	 */
 	private String father;
+	
+	/**
+	 * List de fils
+	 */
 	private List<String> sons;
+	
+	/**
+	 * Nom du noeud
+	 */
 	private String name;
 	
+	/**
+	 * Constructor
+	 * @param name : nom du noeud
+	 * @param father : nom du pere
+	 * @throws RemoteException
+	 */
 	public SiteImplTree(String name, String father) throws RemoteException {
 		this.name = name;
 		this.father = father;
@@ -47,7 +68,7 @@ public class SiteImplTree extends UnicastRemoteObject implements SiteItf {
 	}
 
 	/**
-	 * 
+	 * ajoute un fils a l'arbre
 	 */
 	public void addConnection(String son) throws MalformedURLException,
 			RemoteException, NotBoundException {

@@ -38,6 +38,7 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	public SiteImplGraph(String name) throws RemoteException {
 		this.name = name;
 		this.voisins = new ArrayList<String>();
+		this.spread = false;
 	}
 
 	/**
@@ -45,6 +46,10 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	 * @param data : tableau d'octet propagés
 	 */
 	public void spread(final byte [] data) throws RemoteException {
+		if (spread) {
+			spread = false;
+			return;
+		}
 		// Propage les donnees a tous ses fils
 		System.out.println(" Noeud n° " +  this.name + " : données reçues, je propage à mes fils");
 		for (final String voisin : this.voisins) {
@@ -64,6 +69,7 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 				}.start();
 		}
 		System.out.println(this.name + "données propagées");
+		this.spread = true;
 	}
 	
 	/**
