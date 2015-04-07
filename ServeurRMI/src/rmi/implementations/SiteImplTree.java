@@ -38,6 +38,12 @@ public class SiteImplTree extends UnicastRemoteObject implements SiteItf {
 	private String name;
 	
 	/**
+	 * Array of bytes used to store data to be spread from node to node
+	 */
+	private byte[] data;
+	
+	
+	/**
 	 * Constructor
 	 * @param name : Name of Node
 	 * @param father : Name of father
@@ -56,6 +62,9 @@ public class SiteImplTree extends UnicastRemoteObject implements SiteItf {
 	public void spread(final byte [] data, int id) throws RemoteException {
 		// Propage les donnees a tous ses fils
 		System.out.println(" Noeud n° " +  this.name + " : données reçues, je propage à mes fils");
+		this.data = data;			
+		System.out.println("yo :" + new String(this.getData()));
+
 		for (final String son : this.sons) {
 			new Thread () {
 					public void run() {
@@ -72,7 +81,7 @@ public class SiteImplTree extends UnicastRemoteObject implements SiteItf {
 				}.start();
 			
 		}
-		System.out.println(this.name + "données propagées");
+		System.out.println(this.name + " données propagées");
 	}
 	
 	/**
@@ -82,5 +91,14 @@ public class SiteImplTree extends UnicastRemoteObject implements SiteItf {
 			RemoteException, NotBoundException {
 		if (!this.sons.contains(son)) 
 			this.sons.add(son);
+	}
+	
+	
+	/**
+	 * return the data the node receive and send
+	 * @return data : byte array
+	 */
+	public byte[] getData(){
+		return this.data;
 	}
 }
