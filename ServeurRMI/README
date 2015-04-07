@@ -9,30 +9,71 @@ Il d'agit de créer une application RMI qui diffuse dans sa structure de donnée
 tableau d'octet.
 L'utilisation du package java.rmi est de mise.
 
-Structure du fichier d'entrée :
+Architecture : 
 
-Pour les arbres : 
-Chaque ligne définie un noeud. Le première indice est le nom du père, tant qu'au reste, il s'agit de 
-la liste des fils. Si il y a un -1, il n'y a pas de fils/père. 
+L'application est composée de 4 packages principaux : 
+	rmi.executables : qui contient les sources des trois executables utilisés : 
+		Lancé un noeud de Type Tree
+		Lancé un noeud de Type Graph
+		Lancé une propagation.
+	
+	rmi.implementations : qui contient les implementations de l'interface RMI :
+		SiteImplTree : Noeud de Tree
+		SiteImplGraph : Noeud de Graph
+	
+	rmi.interfaces : qui contient l'interface d'objet RMI.
+		
+	rmi.tests : qui contient les tests de l'application RMI.
+	
 
-Exemple Tree: 
--1 2 5
-1 3 4
-2 -1
-2 -1
-1 6
-5 -1
+A la racine du projet, on trouve plusieurs fichiers : 
 
-Pour les graphes :
-De même que pour l'arbre, mais il n'y a pas de notion de père. Il faut décrire toutes les connexions.
-(cf : si a la ligne 1, le noeud est connecté à 5, alors le noeud 5 est connecté au 1.
+	- deux fichiers exemples de configuration : tree et graph. Il encode l'arbre/graphe de l'exemple
+du cahier TD/TP pour l'applicaiton.
 
-Exemple Graph:
-2 5
-1 3 4
-2
-2
-1 6
-5
+		Structure du fichier d'entrée :
+		
+		Pour les arbres : 
+		Chaque ligne définie un noeud. Le première indice est le nom du père, tant qu'au reste, il s'agit de 
+		la liste des fils. Si il y a un -1, il n'y a pas de fils/père. 
+		
+		Exemple Tree: 
+		-1 2 5
+		1 3 4
+		2 -1
+		2 -1
+		1 6
+		5 -1
+		
+		Pour les graphes :
+		De même que pour l'arbre, mais il n'y a pas de notion de père. Il faut décrire toutes les connexions.
+		(cf : si a la ligne 1, le noeud est connecté à 5, alors le noeud 5 est connecté au 1.
+		
+		Exemple Graph:
+		2 5
+		1 3 4
+		2
+		2
+		1 6
+		5
 
-Il s'agit de l'arbre (ou graphe) de l'exemple du cahier de TD/TP.
+	- Trois fichier .jar executables : 
+		Launch.jar qui lance une propagation (java -jar Launch.jar <origin> <str_to_spread>)
+		LaunchNodeGraph.jar qui crée et inscrit un noeud de type Graph (objet RMI) (java -jar LauncheNodeGraph.jar <name> <<ListOfConnection>>)
+		LaunchNodeTree.jar qui crée et inscrit un noeud de type Tree (objet RMI) (java -jar LauncheNodeTree.jar <name> <father> <<ListOfSons>>)
+	
+	-Trois script shell : 
+		set-env.sh : ce script compile les .class avec rmic afin de créer les objets RMI, puis lance rmiregistry dans un xterm.
+		run.sh : ce script utilise les .jar pour construire la structure de données à l'aide du fichier de structure passé en parametre (./run.sh (-g) <struct_file>)
+			L'option -g n'est pas obligatoire, mais si elle est passée, le script construira des objets RMI de type Graph
+		launch.sh : ce script utilise le Launch.jar pour propagé une chaine de caratères dans la structure de données. (./launch <origin> <str_to_spread>)
+		
+		
+
+
+
+
+
+
+
+
