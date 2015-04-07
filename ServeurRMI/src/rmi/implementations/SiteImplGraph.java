@@ -6,7 +6,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import rmi.interfaces.SiteItf;
 
@@ -31,10 +33,12 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	 */
 	private String name;
 	
+	
 	/**
-	 * List of the id to know if we spread or not.
+	 * Map of the id to know if we spread or not.
+	 * the Key is the Idea, and the value is the timeStamp
 	 */
-	private List<Integer> listId;
+	private Map<Integer, Long> idToTimeStamp;
 	
 	
 	/**
@@ -45,7 +49,7 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	public SiteImplGraph(String name) throws RemoteException {
 		this.name = name;
 		this.successor = new ArrayList<String>();
-		this.listId = new ArrayList<Integer>();
+		this.idToTimeStamp = new HashMap<Integer, Long>();
 	}
 
 	/**
@@ -53,9 +57,10 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	 * @args : id is used to know if the node already spread it or not
 	 */
 	public void spread(final byte [] data,final int id) throws RemoteException {
-		if (this.listId.contains(id))
+		checkTime();
+		if (this.idToTimeStamp.containsKey(id))
 			return;
-		this.listId.add(id);
+		this.idToTimeStamp.put(id, System.currentTimeMillis());
 		// spread to all sons
 		System.out.println(" Noeud n° " +  this.name + " : données reçues, je propage à mes fils");
 		for (final String voisin : this.successor) {
@@ -74,7 +79,7 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 					}
 				}.start();
 		}
-		System.out.println(this.name + "données propagées");
+		System.out.println(this.name + " données propagées");
 	}
 	
 	/**
@@ -83,6 +88,14 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	public void addConnection(String name) throws MalformedURLException, RemoteException, NotBoundException {
 		if (!this.successor.contains(name)) 
 			this.successor.add(name);
+	}
+	
+	private void checkTime() {
+		for (Integer id : this.idToTimeStamp.keySet()) {
+			if (System.currentTimeMillis() - this.idToTimeStamp.get(id) > 10000) {
+				this.idToTimeStamp.remove(id);
+			}
+		}
 	}
 	
 }

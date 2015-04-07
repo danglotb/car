@@ -69,6 +69,18 @@ du cahier TD/TP pour l'applicaiton.
 		launch.sh : ce script utilise le Launch.jar pour propagé une chaine de caratères dans la structure de données. (./launch <origin> <str_to_spread>)
 		
 		
+		
+Gestion des propagations dans le graphe : 
+	
+	Chaque propagation se voit assigné un entier unique (du moins, on l'espère) qui est construit a partir du message et d'un 
+	nombre aléatoire (qui se base sur le temps)
+	
+	Si le noeud possede déjà l'id de la propagation, il ne la repropage pas.
+	
+	A chaque nouvelle propagation, il vérifie si les propagations enregistrées ne sont pas trop vieilles (plus de 10000 ms), si c'est le
+	cas, le noeud la supprime.
+		
+		
 
 
 
