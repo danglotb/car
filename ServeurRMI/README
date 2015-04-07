@@ -6,16 +6,16 @@ TP4 : RMI : Transfert de données
 Introduction : 
 
 Il d'agit de créer une application RMI qui diffuse dans sa structure de données (arbre ou graphe) un
-tableau d'octet.
+tableau d'octets.
 L'utilisation du package java.rmi est de mise.
 
 Architecture : 
 
 L'application est composée de 4 packages principaux : 
 	rmi.executables : qui contient les sources des trois executables utilisés : 
-		Lancé un noeud de Type Tree
-		Lancé un noeud de Type Graph
-		Lancé une propagation.
+		Lancer un noeud de type Tree
+		Lancer un noeud de type Graph
+		Lancer une propagation.
 	
 	rmi.implementations : qui contient les implementations de l'interface RMI :
 		SiteImplTree : Noeud de Tree
@@ -28,14 +28,14 @@ L'application est composée de 4 packages principaux :
 
 A la racine du projet, on trouve plusieurs fichiers : 
 
-	- deux fichiers exemples de configuration : tree et graph. Il encode l'arbre/graphe de l'exemple
+	- deux fichiers d'exemple de configuration : tree et graph. Il encode l'arbre/graphe de l'exemple
 du cahier TD/TP pour l'applicaiton.
 
 		Structure du fichier d'entrée :
 		
 		Pour les arbres : 
-		Chaque ligne définie un noeud. Le première indice est le nom du père, tant qu'au reste, il s'agit de 
-		la liste des fils. Si il y a un -1, il n'y a pas de fils/père. 
+		Chaque ligne définie un noeud. Le premier indice est le nom du père, les autres la ses fils. 
+		Si il y a un -1, il n'y a pas de fils/père. 
 		
 		Exemple Tree: 
 		-1 2 5
@@ -46,7 +46,7 @@ du cahier TD/TP pour l'applicaiton.
 		5 -1
 		
 		Pour les graphes :
-		De même que pour l'arbre, mais il n'y a pas de notion de père. Il faut décrire toutes les connexions.
+		De même que pour l'arbre, sans la notion de père. Il faut préciser toutes les connexions.
 		(cf : si a la ligne 1, le noeud est connecté à 5, alors le noeud 5 est connecté au 1.
 		
 		Exemple Graph:
@@ -63,19 +63,19 @@ du cahier TD/TP pour l'applicaiton.
 		LaunchNodeTree.jar qui crée et inscrit un noeud de type Tree (objet RMI) (java -jar LauncheNodeTree.jar <name> <father> <<ListOfSons>>)
 	
 	-Trois script shell : 
-		set-env.sh : ce script compile les .class avec rmic afin de créer les objets RMI, puis lance rmiregistry dans un xterm.
+		set-env.sh : ce script compile les .class avec rmic afin de créer les objets RMI, puis lance rmiregistry dans xterm.
 		run.sh : ce script utilise les .jar pour construire la structure de données à l'aide du fichier de structure passé en parametre (./run.sh (-g) <struct_file>)
 			L'option -g n'est pas obligatoire, mais si elle est passée, le script construira des objets RMI de type Graph
-		launch.sh : ce script utilise le Launch.jar pour propagé une chaine de caratères dans la structure de données. (./launch <origin> <str_to_spread>)
+		launch.sh : ce script utilise le Launch.jar pour propager une chaîne de caratères dans la structure de données. (./launch <origin> <str_to_spread>)
 		
 		
 		
 Gestion des propagations dans le graphe : 
 	
-	Chaque propagation se voit assigné un entier unique (du moins, on l'espère) qui est construit a partir du message et d'un 
+	Chaque propagation se voit assigner un entier unique (du moins, on l'espère) qui est construit a partir du message et d'un 
 	nombre aléatoire (qui se base sur le temps)
 	
-	Si le noeud possede déjà l'id de la propagation, il ne la repropage pas.
+	Si le noeud possède déjà l'id de la propagation, il ne la repropage pas.
 	
 	A chaque nouvelle propagation, il vérifie si les propagations enregistrées ne sont pas trop vieilles (plus de 10000 ms), si c'est le
 	cas, le noeud la supprime.
