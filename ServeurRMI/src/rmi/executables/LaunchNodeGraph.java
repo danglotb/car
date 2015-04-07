@@ -26,7 +26,6 @@ public class LaunchNodeGraph {
 			if (!args[i].equals("-1"))
 				node.addConnection(args[i]);
 		}
-		
 	}
 
 }

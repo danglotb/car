@@ -1,20 +1,9 @@
 #/bin/bash
 
-bin_directory=bin
-src_directory=src
+#check args
+if [ $# -lt 2 ] ; then
+    echo 'usage : ./launch.sh <origin> <str_to_spread>'
+    exit 1
+fi
 
-site=SiteImplTree
-
-javac $src_directory/*.java 
-sleep 1
-cd bin
-rmic $site
-
-sleep 1
-rmiregistry &
-sleep 1
-java Main &
-sleep 1
-java Client &
-
-
+java -jar Launch.jar $1 $2

@@ -6,28 +6,19 @@ if [ $# -eq 0 ] ; then
     exit 1
 fi
 
-echo 'compiling...'
-#setting env
-bin_directory=bin
-src_directory=src
-tree_node=SiteImplTree
-tree_graph=SiteImplGraph
-#compile
-javac $src_directory/*.java -d $bin_directory
-sleep 1
-cd $bin_directory
-rmic $tree_node
-sleep 1
-rmic $tree_graph
-rmiregistry &
+path=rmi.executables
+file=$1
+index=1
+
+#cd bin
 
 #launch nodes
 echo 'launching nodes...'
-file=../$1
-index=1
 while read p
 do
     echo $index $p
-    #xterm -e java LaunchNodeTree $index $p &
+    xterm -e java -jar LaunchNodeTree.jar $index $p &
     index=$(($index+1))
 done < $file
+
+#cd ..

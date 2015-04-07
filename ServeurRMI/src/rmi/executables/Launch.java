@@ -10,7 +10,7 @@ import rmi.interfaces.SiteItf;
 /**
  * Client
  */
-public class Client {
+public class Launch {
 	
 	/**
 	 * 

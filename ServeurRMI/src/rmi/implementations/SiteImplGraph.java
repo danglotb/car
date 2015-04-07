@@ -32,7 +32,7 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	private String name;
 	
 	/**
-	 * List of the id to know if we spread ornot.
+	 * List of the id to know if we spread or not.
 	 */
 	private List<Integer> listId;
 	
