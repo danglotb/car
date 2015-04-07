@@ -9,18 +9,12 @@ import java.rmi.RemoteException;
  */
 public interface SiteItf extends Remote {
 	
-	//TODO : rm this uselesss method 
-	public void addFils(SiteItf fils)  throws RemoteException;
-	public String getNum() throws RemoteException;
-	public void addFather(String father) throws RemoteException, MalformedURLException, NotBoundException;
-	
-	
 	/**
 	 * Methode qui ajoute un lien entre le noeud courant et le nom dont le nom est passé en parametre
 	 * @param name nom du voisin a ajouté
 	 * TODO : renommer pour que la sémantique fonctionne sur les deux implementation (tree & graph)
 	 */
-	public void addVoisin(String name) throws MalformedURLException, RemoteException, NotBoundException;
+	public void addConnection(String name) throws MalformedURLException, RemoteException, NotBoundException;
 	
 	/**
 	 * Methode de propagation de données

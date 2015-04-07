@@ -20,7 +20,7 @@ public class LaunchNodeGraph {
 		for (int i = 1 ; i < args.length ; i++) {
 			// on verifie qu'il s'agit bien d'un voisin, et non pas du -1
 			if (!args[i].equals("-1"))
-				node.addVoisin(args[i]);
+				node.addConnection(args[i]);
 		}
 		
 	}

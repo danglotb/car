@@ -1,27 +1,38 @@
 Benjamin DANGLOT
 Antoine PHILIPPE
 
-TP4 : RMI : Transfert de données
+TP4 : RMI : Transfert de donnÃ©es
 
 Introduction : 
 
-Il d'agit de créer une application RMI qui diffuse dans sa structure de données (arbre ou graphe) un
+Il d'agit de crÃ©er une application RMI qui diffuse dans sa structure de donnÃ©es (arbre ou graphe) un
 tableau d'octet.
-L'utilisation du package java.rmi est de mise. LOL
+L'utilisation du package java.rmi est de mise.
 
-Structure du fichier d'entrée :
+Structure du fichier d'entrÃ©e :
 
-En première ligne, le nombre total de Noeud de la structure de données. Puis, pour chaque noeud, la liste
-des fils ou des voisins séparés d'un espace. (-1 dans le cas d'un noeud sans fils ou voisin)
+Pour les arbres : 
+Chaque ligne dÃ©finie un noeud. Le premiÃ¨re indice est le nom du pÃ¨re, tant qu'au reste, il s'agit de 
+la liste des fils. Si il y a un -1, il n'y a pas de fils/pÃ¨re. 
 
-Exemple: 
+Exemple Tree: 
+-1 2 5
+1 3 4
+2 -1
+2 -1
+1 6
+5 -1
 
-6 #NB_NODE
+Pour les graphes :
+De mÃªme que pour l'arbre, mais il n'y a pas de notion de pÃ¨re. Il faut dÃ©crire toutes les connexions.
+(cf : si a la ligne 1, le noeud est connectÃ© Ã  5, alors le noeud 5 est connectÃ© au 1.
+
+Exemple Graph:
 2 5
-3
--1
--1
-6
--1
+1 3 4
+2
+2
+1 6
+5
 
-Il s'agit de l'arbre (ou graphe) de l'exemple du cahier de TD/TP
+Il s'agit de l'arbre (ou graphe) de l'exemple du cahier de TD/TP.

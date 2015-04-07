@@ -18,7 +18,7 @@ sleep 1
 cd $bin_directory
 rmic $tree_node
 sleep 1
-# rmic $tree_graph
+rmic $tree_graph
 rmiregistry &
 
 #launch nodes
@@ -28,9 +28,6 @@ index=1
 while read p
 do
     echo $index $p
-    java LaunchNodeTree $index $p &
+    #java LaunchNodeTree $index $p &
     index=$(($index+1))
-    # if [ $index -gt 1 ] ; then
-    # 	exit 0
-    # fi
 done < $file

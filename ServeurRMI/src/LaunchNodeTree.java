@@ -16,15 +16,20 @@ public class LaunchNodeTree {
 	 */
 	public static void main(String[] args) throws RemoteException, MalformedURLException, AlreadyBoundException, NotBoundException {
 		
-		SiteImplTree node = new SiteImplTree(args[0]);
-		System.out.println("arg : "+ args[0] + " " + " node : " + node.getNum());
+		SiteImplTree node;
 		
+		if (args[1].equals("-1"))
+			node = new SiteImplTree(args[0], null);
+		else
+			node = new SiteImplTree(args[0], args[1]);
+			
 		//Incription du node aupres de rmiRegistry 
-		Naming.rebind(args[0], node);
-		for (int i = 1 ; i < args.length ; i++) {
+		Naming.bind(args[0], node);
+		
+		for (int i = 2 ; i < args.length ; i++) {
 			// on verifie qu'il s'agit bien d'un fils, et non pas du -1
 			if (!args[i].equals("-1"))
-				node.addSon(args[i]);
+				node.addConnection(args[i]);
 		}
 		
 	}

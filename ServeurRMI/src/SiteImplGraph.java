@@ -24,9 +24,11 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	private List<String> voisins;
 	
 	/**
-	 * Nom du nom
+	 * Nom du noeud
 	 */
 	private String name;
+	
+	private boolean spread;
 	
 	/**
 	 * Constructor
@@ -46,6 +48,7 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 		// Propage les donnees a tous ses fils
 		System.out.println(" Noeud n° " +  this.name + " : données reçues, je propage à mes fils");
 		for (final String voisin : this.voisins) {
+			//Concurrence
 			new Thread () {
 					public void run() {
 						try {
@@ -64,48 +67,12 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	}
 	
 	/**
-	 * Accesseur sur la chaine de caractères du nom du noeud
-	 * @return le nom du nom sous forme de String
-	 * @throws RemoteException
-	 */
-	public String getName() throws RemoteException {
-		return this.name;
-	}
-	
-	/**
 	 * Ajout un voisin à la liste des voisins
 	 * @param name : nom du nom voisin a ajouté sous forme de String
-	 * la methode addVoisin du voisin ajouté (le noeud s'ajoute lui-même a la liste)
 	 */
-	public void addVoisin(String name) throws MalformedURLException, RemoteException, NotBoundException {
-		if (!this.voisins.contains(name)) {
+	public void addConnection(String name) throws MalformedURLException, RemoteException, NotBoundException {
+		if (!this.voisins.contains(name)) 
 			this.voisins.add(name);
-			((SiteItf)(Naming.lookup(name))).addVoisin(this.name);
-		}
 	}
 	
-	//TODO rm
-	
-	/**
-	 * @Unused
-	 */
-	public String getNum() throws RemoteException{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @Unused
-	 */
-	@Override
-	public void addFils(SiteItf fils) throws RemoteException {
-		throw new UnsupportedOperationException();
-	}
-	
-	/**
-	 * 
-	 * @throw new UnsupportedOperationException 
-	 */
-	public void addFather(String father) throws RemoteException {
-		throw new UnsupportedOperationException();
-	}
 }
