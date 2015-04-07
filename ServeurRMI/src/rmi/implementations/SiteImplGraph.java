@@ -42,6 +42,12 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 	
 	
 	/**
+	 * Array of bytes used to store data to be spread from node to node
+	 */
+	private byte[] data;
+	
+	
+	/**
 	 * Constructor
 	 * @param name : Name of Node
 	 * @throws RemoteException
@@ -64,6 +70,7 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 		// spread to all sons
 		System.out.println(" Noeud n° " +  this.name + " : données reçues...");
 		System.out.println(new String(data) + "... je propage à mes successeurs");
+		this.data = data;			
 		for (final String voisin : this.successor) {
 			//Concurrency
 			new Thread () {
@@ -97,6 +104,15 @@ public class SiteImplGraph extends UnicastRemoteObject implements SiteItf {
 				this.idToTimeStamp.remove(id);
 			}
 		}
+	}
+	
+	
+	/**
+	 * return the data the node receive and send
+	 * @return data : byte array
+	 */
+	public byte[] getData(){
+		return this.data;
 	}
 	
 }

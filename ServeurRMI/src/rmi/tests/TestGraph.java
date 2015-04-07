@@ -19,11 +19,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import rmi.implementations.SiteImplTree;
+import rmi.implementations.SiteImplGraph;
 
-public class TestTree {
+public class TestGraph {
 
-		private SiteImplTree[] tree;
+		private SiteImplGraph[] graph;
 		private static Registry rmi;
 		
 		@AfterClass
@@ -46,18 +46,18 @@ public class TestTree {
 		
 		@Before
 		public void init(){
-			tree = new SiteImplTree[4];
+			graph = new SiteImplGraph[4];
 			try {
-				tree[0] = new SiteImplTree("1", null);
-				tree[1] = new SiteImplTree("2", "1");
-				Naming.bind("2", tree[1]);
-				tree[0].addConnection("2");
-				tree[1].addConnection("3");
-				tree[2] = new SiteImplTree("3", "1");
-				Naming.bind("3", tree[2]);
-				tree[3] = new SiteImplTree("4", "2");
-				Naming.bind("4", tree[3]);
-				tree[2].addConnection("4");
+				graph[0] = new SiteImplGraph("1");
+				graph[1] = new SiteImplGraph("2");
+				Naming.bind("2", graph[1]);
+				graph[0].addConnection("2");
+				graph[1].addConnection("3");
+				graph[2] = new SiteImplGraph("3");
+				Naming.bind("3", graph[2]);
+				graph[3] = new SiteImplGraph("4");
+				Naming.bind("4", graph[3]);
+				graph[2].addConnection("4");
 
 			} catch (RemoteException | MalformedURLException | NotBoundException | AlreadyBoundException e) {
 				e.printStackTrace();
@@ -69,15 +69,15 @@ public class TestTree {
 		public void testSpreadData(){
 			byte[] data = "toto".getBytes();
 			try {
-				tree[0].spread(data, 0);
+				graph[0].spread(data, 0);
 				Thread.sleep(100);
 			} catch (RemoteException | InterruptedException e) {
 				fail("Spread error");
 			}
-			assertTrue(Arrays.equals(data,tree[0].getData()));
-			assertTrue(Arrays.equals(data,tree[1].getData()));
-			assertTrue(Arrays.equals(data,tree[2].getData()));
-			assertTrue(Arrays.equals(data,tree[3].getData()));
+			assertTrue(Arrays.equals(data,graph[0].getData()));
+			assertTrue(Arrays.equals(data,graph[1].getData()));
+			assertTrue(Arrays.equals(data,graph[2].getData()));
+			assertTrue(Arrays.equals(data,graph[3].getData()));
 		}
 		
 }
